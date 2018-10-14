@@ -19,6 +19,7 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-surround'
 Plug 'w0rp/ale'
+Plug 'arcticicestudio/nord-vim'
 call plug#end()
 
 " Mappings
@@ -31,8 +32,8 @@ syntax on
 " Appearance
 set t_Co=256
 set cursorline
-colorscheme onehalfdark
-let g:lightline = { 'colorscheme': 'onehalfdark' }
+colorscheme nord 
+let g:lightline = { 'colorscheme': 'nord' }
 set noshowmode
 
 set guifont=Menlo\ Regular:h18
