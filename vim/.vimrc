@@ -19,7 +19,11 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-surround'
 Plug 'w0rp/ale'
-Plug 'arcticicestudio/nord-vim'
+Plug 'joshdick/onedark.vim'
+" Plug 'lervag/vimtex'
+" A Vim Plugin for Lively Previewing LaTeX PDF Output
+Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
+
 call plug#end()
 
 " Mappings
@@ -31,9 +35,10 @@ syntax on
 
 " Appearance
 set t_Co=256
+let g:onedark_termcolors=256
 set cursorline
-colorscheme nord 
-let g:lightline = { 'colorscheme': 'nord' }
+colorscheme onedark 
+let g:lightline = { 'colorscheme': 'onedark' }
 set noshowmode
 
 set guifont=Menlo\ Regular:h18
