@@ -1,16 +1,35 @@
 set nocompatible
 
 " Download vim-plug on set up
-if empty(glob('~/.vim/autoload/plug.vim'))
-    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
+" if empty(glob('~/.vim/autoload/plug.vim'))
+"     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+"     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+" endif
 
 " Plug list
 call plug#begin()
+
+" Must have
+
 Plug 'tpope/vim-sensible'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+
+" Utility
+
+Plug 'scrooloose/nerdtree'
+Plug 'ryanoasis/vim-devicons'
+let NERDTreeQuitOnOpen = 1
+let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --java-completer' }
+Plug 'Raimondi/delimitMate'
+
+" Theme
+
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'itchyny/lightline.vim'
 Plug 'airblade/vim-gitgutter'
@@ -28,34 +47,63 @@ call plug#end()
 
 " Mappings
 map <C-o> :NERDTreeToggle<CR>
+map <C-p> :FZF<CR>
 
 " params on/off
-filetype on
+
 syntax on
-
-" Appearance
-set t_Co=256
-let g:onedark_termcolors=256
-set cursorline
-colorscheme onedark 
-let g:lightline = { 'colorscheme': 'onedark' }
-set noshowmode
-
-set guifont=Menlo\ Regular:h18
-" set lines=35 "columns=150
-set colorcolumn=90
-set number relativenumber
-
+filetype on
 set hidden
 set history=100
-filetype indent on
-set shiftwidth=2
-set expandtab
-set smartindent
+
+" Appearance
+
+set t_Co=256
+set cursorline
+set guifont=Hack\ Regular\ Nerd\ Font\ Complete:h18
+
+colorscheme onedark 
+let g:onedark_termcolors=256
+let g:lightline = { 'colorscheme': 'onedark' }
+set noshowmode 
+
+" Indentation & Tabs
+
 set autoindent
+set smartindent
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set smarttab
+
+" Display & format
+
+set number relativenumber
+set textwidth=80
+set wrapmargin=2
+set showmatch
+
+" Search
 
 set hlsearch
+set incsearch
+set ignorecase
+set smartcase
 set showmatch
-set cmdheight=2
 
+" Browse & Scroll
 
+set scrolloff=5
+set laststatus=2
+
+" Spell
+
+set spell spelllang=en_us
+
+" Miscellaneous
+
+set nobackup
+set noswapfile
+set autochdir
+set visualbell
+set errorbells

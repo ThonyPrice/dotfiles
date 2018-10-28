@@ -17,6 +17,7 @@ PATH="/usr/local/share/python/:$PATH"                   # Python
 export PATH=$PATH:/usr/local/go/bin                     # Golang
 export GOPATH=$HOME/work                                # Golang
 export PATH=$PATH:/usr/local/Cellar/ruby/2.5.3/bin      # Export Ruby environment
+tmux source-file ~/.tmux.conf                           # Source tmux conf
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/Thony/Downloads/google-cloud-sdk/path.zsh.inc' ]; then 
@@ -45,7 +46,7 @@ source $(dirname $(gem which colorls))/tab_complete.sh
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
+# ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # COMPLETION_WAITING_DOTS="true"
@@ -115,8 +116,11 @@ alias lsl='colorls -lA --sd'    # Colorls all files as sorted list
 alias lst='colorls --tree'      # Color ls in tree view
 
 alias gs='git status'
-alias gc='git commit'
+alias gc='git commit -m'
 alias gp='git push'
+alias ga='git add'
+
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
