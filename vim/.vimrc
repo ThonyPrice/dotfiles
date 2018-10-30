@@ -38,7 +38,15 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-surround'
 Plug 'w0rp/ale'
-Plug 'joshdick/onedark.vim'
+" Plug 'joshdick/onedark.vim'
+Plug 'arcticicestudio/nord-vim'
+let g:nord_italic = 1
+let g:nord_underline = 1
+let g:nord_italic_comments = 1
+let g:nord_uniform_status_lines = 1
+" let g:nord_comment_brightness = 12
+let g:nord_uniform_diff_background = 1
+let g:nord_cursor_line_number_background = 1
 " Plug 'lervag/vimtex'
 " A Vim Plugin for Lively Previewing LaTeX PDF Output
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
@@ -62,9 +70,11 @@ set t_Co=256
 set cursorline
 set guifont=Hack\ Regular\ Nerd\ Font\ Complete:h18
 
-colorscheme onedark 
+colorscheme nord 
 let g:onedark_termcolors=256
-let g:lightline = { 'colorscheme': 'onedark' }
+let g:lightline = {
+      \ 'colorscheme': 'nord',
+      \ }
 set noshowmode 
 
 " Indentation & Tabs
