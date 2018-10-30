@@ -1,0 +1,97 @@
+# enter fullscreen mode for the focused container
+alt - f : chunkc tiling::window --toggle fullscreen
+
+# change focus between tiling / floating windows
+shift + alt - space : chunkc tiling::window --toggle float
+
+# change layout of desktop
+alt - a : chunkc tiling::desktop --layout bsp
+alt - s : chunkc tiling::desktop --layout monocle
+alt - d : chunkc tiling::desktop --layout float
+
+# kill focused window
+# shift + alt - q : chunkc tiling::window --close
+
+# change focus
+alt - h : chunkc tiling::window --focus west
+alt - j : chunkc tiling::window --focus south
+alt - k : chunkc tiling::window --focus north
+alt - l : chunkc tiling::window --focus east
+# alt - p : chunkc tiling::window --focus prev
+# alt - n : chunkc tiling::window --focus next
+
+# move focused window
+shift + alt - h : chunkc tiling::window --warp west
+shift + alt - j : chunkc tiling::window --warp south
+shift + alt - k : chunkc tiling::window --warp north
+shift + alt - l : chunkc tiling::window --warp east
+
+# rotate 90 clockwise
+shift + alt - r : chunkc tiling::desktop --rotate 90
+
+# move window
+shift + cmd - h : chunkc tiling::window --swap west
+shift + cmd - j : chunkc tiling::window --swap south
+shift + cmd - k : chunkc tiling::window --swap north
+shift + cmd - l : chunkc tiling::window --swap east
+
+# make floating window fill left-half of screen
+cmd + alt - h : chunkc tiling::window --grid-layout 1:2:0:0:1:1
+# make floating window fill right-half of screen
+cmd + alt - l : chunkc tiling::window --grid-layout 1:2:1:0:1:1
+
+# increase region size
+shift + alt - a : chunkc tiling::window --use-temporary-ratio 0.025 --adjust-window-edge west
+shift + alt - s : chunkc tiling::window --use-temporary-ratio 0.025 --adjust-window-edge south
+shift + alt - w : chunkc tiling::window --use-temporary-ratio 0.025 --adjust-window-edge north
+shift + alt - d : chunkc tiling::window --use-temporary-ratio 0.025 --adjust-window-edge east
+
+# decrease region size
+shift + cmd - a : chunkc tiling::window --use-temporary-ratio -0.025 --adjust-window-edge west
+shift + cmd - s : chunkc tiling::window --use-temporary-ratio -0.025 --adjust-window-edge south
+shift + cmd - w : chunkc tiling::window --use-temporary-ratio -0.025 --adjust-window-edge north
+shift + cmd - d : chunkc tiling::window --use-temporary-ratio -0.025 --adjust-window-edge east
+
+# Focus workspace
+cmd + alt - 1 : chunkc tiling::desktop --focus 1
+cmd + alt - 2 : chunkc tiling::desktop --focus 2
+cmd + alt - 3 : chunkc tiling::desktop --focus 3
+cmd + alt - 4 : chunkc tiling::desktop --focus 4
+cmd + alt - 5 : chunkc tiling::desktop --focus 5
+
+# move focused container to workspace
+shift + alt - p : chunkc tiling::window --send-to-desktop prev
+shift + alt - n : chunkc tiling::window --send-to-desktop next
+shift + alt - 1 : chunkc tiling::window --send-to-desktop 1
+shift + alt - 2 : chunkc tiling::window --send-to-desktop 2
+shift + alt - 2 : chunkc tiling::window --send-to-desktop 3
+shift + alt - 2 : chunkc tiling::window --send-to-desktop 4
+shift + alt - 2 : chunkc tiling::window --send-to-desktop 5
+
+# create desktop and follow focus
+cmd + alt - n : chunkc tiling::desktop --create;\
+                id=$(chunkc tiling::query --desktops-for-monitor $(chunkc tiling::query --monitor-for-desktop $(chunkc tiling::query --desktop id)));\
+                chunkc tiling::desktop --focus $(echo ${id##* })
+
+# destroy desktop
+cmd + alt - w : chunkc tiling::desktop --annihilate
+
+# toggle desktop offset
+alt - w : chunkc tiling::desktop --toggle offset
+
+# float / unfloat window and center on screen
+alt - t : chunkc tiling::window --toggle float;\
+          chunkc tiling::window --grid-layout 4:4:1:1:2:2
+
+# toggle sticky
+alt - y : chunkc tiling::window --toggle sticky
+
+
+
+# Open new Terminal
+cmd + shift - return : /Applications/iTerm2.app/Contents/MacOS/iTerm2 --single-instance -d ~
+
+# Open browser
+# cmd + shift - g : /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --single-instance -d ~
+
+
