@@ -1,68 +1,32 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# --- Config Layout ---
 
-# Add z-package for easy search of dir history
-. /usr/local/bin/z.sh
+# Paths and Basics - Get zsh to run as expected
+# Plugins - Add cool stuff
+# Theming and Looks - Make it look great
+# User Configuration - Set it and forget it
+# Aliases - Save time and typing
+# Default Settings and Options - Don't forget
+
 
 ############################
 ###   PATHS AND BASICS   ###
 ############################
 
-# More themes at  https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="spaceship"
+# --- Zsh paths ---
+# export PATH=$HOME/bin:/usr/local/bin:$PATH            # If you come from bash you might have to change your $PATH.
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh                  # Fuzzy search, https://github.com/junegunn/fzf
 
-# Path to your oh-my-zsh installation.
-export ZSH=/Users/$USER/.oh-my-zsh                      # zsh installation path
+# --- Environments ---
 PATH="/usr/local/share/python/:$PATH"                   # Python
 export PATH=$PATH:/usr/local/go/bin                     # Golang
-export GOPATH=$HOME/work                                # Golang
 export PATH=$PATH:/usr/local/Cellar/ruby/2.5.3/bin      # Export Ruby environment
-tmux source-file ~/.tmux.conf                           # Source tmux conf
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/Thony/Downloads/google-cloud-sdk/path.zsh.inc' ]; then 
-  source '/Users/Thony/Downloads/google-cloud-sdk/path.zsh.inc'; 
-fi
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/Thony/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then 
-  source '/Users/Thony/Downloads/google-cloud-sdk/completion.zsh.inc'; 
-fi
 export PATH="/usr/local/opt/node@4/bin:$PATH"
 export PATH="/usr/local/opt/node@6/bin:$PATH"
 
-# Specify autosuggestions style
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=3"
-# Add syntax highlighting
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# Enable tab completion with collorls
-source $(dirname $(gem which colorls))/tab_complete.sh
+# --- Source files ---
+. /Users/thonyprice/.nix-profile/etc/profile.d/nix.sh
+# tmux source-file ~/.tmux.conf                           # Source tmux conf
 
-
-#####################################
-###   DEFAULT SETTINGS OPTIONS   ####
-#####################################
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
 
 ###################
 ###   PLUGINS   ###
@@ -73,22 +37,63 @@ source $(dirname $(gem which colorls))/tab_complete.sh
 # Add wisely, as too many plugins slow down shell startup.
 
 plugins=(git)
+
 plugins=(zsh-256color)
+
 plugins=(zsh-autosuggestions)
+
+export ZSH=/Users/$USER/.oh-my-zsh
+source $ZSH/oh-my-zsh.sh
+
+#############################
+###   THEMING AND LOOKS   ###
+#############################
+
+# More themes at  https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+ZSH_THEME="dracula"
+
+# Set Spaceship ZSH as a prompt
+autoload -U promptinit; promptinit
+prompt spaceship
+
+# Specify autosuggestions style
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=3"
+
+# Add syntax highlighting
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Enable tab completion with collorls
+source $(dirname $(gem which colorls))/tab_complete.sh
+
+# --- Vim Mode ---
+
+bindkey -v
+
+bindkey '^w' backward-kill-word
+bindkey '^r' history-incremental-search-backward
+
+precmd() { RPROMPT="" }
+function zle-line-init zle-keymap-select {
+   VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
+   RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
+   zle reset-prompt
+}
+
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+export KEYTIMEOUT=1
+
+# --- #/Vim Mode ---
+
 
 ##############################
 ###   USER CONFIGURATION   ###
 ##############################
 
-plugins=(git)
-plugins=(zsh-256color)
-plugins=(zsh-autosuggestions)
-
 export LANG=sv_SE.UTF-8
 export LC_ALL=en_US.UTF-8 
 export LANG=en_US.UTF-8
-
-source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -111,6 +116,8 @@ source $ZSH/oh-my-zsh.sh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 
+alias vim='nvim'
+alias cl='clear'
 alias ls='colorls'              # Use colorls as default
 alias lsl='colorls -lA --sd'    # Colorls all files as sorted list
 alias lst='colorls --tree'      # Color ls in tree view
@@ -119,8 +126,37 @@ alias gs='git status'
 alias gc='git commit -m'
 alias gp='git push'
 alias ga='git add'
+alias gd='git diff'
 
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+alias zshconfig="mate ~/.zshrc"
+alias ohmyzsh="mate ~/.oh-my-zsh"
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+alias sss="source ~/.zshrc"
+
+
+#####################################
+###   DEFAULT SETTINGS OPTIONS   ####
+#####################################
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+ENABLE_CORRECTION="false"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
