@@ -25,7 +25,6 @@ let NERDTreeDirArrows = 1
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --java-completer' }
 Plug 'Raimondi/delimitMate'
 
 " Theme
@@ -33,12 +32,10 @@ Plug 'Raimondi/delimitMate'
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'itchyny/lightline.vim'
 Plug 'airblade/vim-gitgutter'
-Plug 'junegunn/fzf.vim'
-Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-surround'
-Plug 'w0rp/ale'
 " Plug 'joshdick/onedark.vim'
+Plug 'dracula/dracula-theme'
 Plug 'arcticicestudio/nord-vim'
 let g:nord_italic = 1
 let g:nord_underline = 1
@@ -49,7 +46,7 @@ let g:nord_uniform_diff_background = 1
 let g:nord_cursor_line_number_background = 1
 " Plug 'lervag/vimtex'
 " A Vim Plugin for Lively Previewing LaTeX PDF Output
-Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
+" Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 
 call plug#end()
 
@@ -68,10 +65,10 @@ set history=100
 
 set t_Co=256
 set cursorline
-set guifont=Hack\ Regular\ Nerd\ Font\ Complete:h18
+set guifont=Hack\ Regular\ Nerd\ Font:h18
 
-colorscheme nord 
-let g:onedark_termcolors=256
+colorscheme  
+" let g:onehalf_termcolors=256
 let g:lightline = {
       \ 'colorscheme': 'nord',
       \ }
@@ -108,7 +105,7 @@ set laststatus=2
 
 " Spell
 
-set spell spelllang=en_us
+" set spell spelllang=en_us
 
 " Miscellaneous
 
@@ -117,3 +114,10 @@ set noswapfile
 set autochdir
 set visualbell
 set errorbells
+set shortmess=a
+set cmdheight=2
+
+"command! -nargs=+ Silent
+"\   execute 'silent <args>'
+"\ | redraw!
+"Silent command
