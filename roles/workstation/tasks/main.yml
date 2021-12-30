@@ -17,6 +17,6 @@
       # - ttf-jetbrains-mono
 
 - name: Symlink neovim dotfiles
-  shell: stow -d ~/Git/dotfiles/.config/{{item}} -t ~/.config/{{item}}
+  shell: stow -d /home/thony/Git/dotfiles/.config/{{item}} -t /home/thony/.config/{{item}}
   with_items:
     - nvim
