@@ -1,11 +1,12 @@
 - name: install packages
   package:
     name:
+      - stow
       # - acpilight 
       - gtop
       # - fish
       # - kitty  
-      # - neovim
+      - neovim
       # - npm
       # - python-pip
       # - ranger
@@ -14,3 +15,8 @@
       # - spotify
       # - stow
       # - ttf-jetbrains-mono
+
+- name: Symlink neovim dotfiles
+  shell: stow -d ./../../../.config/{{item}} -t ~/.config/{{item}}
+  with_items:
+    - nvim
