@@ -1,24 +1,15 @@
-# .dotfiles
-💻 Personal dotfiles setup
+# Dotfiles
+💻 Personal dotfiles setup, managed with Ansible and GNU Stow.
 
-(Under contruction, please come back later)
+## Description
+Lorem ipsum...
 
-__insert screenshot here__
-
-## Introduction
-
-Dotfiles are...
-
-## Managing
-
-GNU stow
-
-## Install
-
-Clone, run ./install.sh
-
-## Credits
-
-- List
-- Of
-- Stuff
+## Todo
+- [ ] Use (and document) how to use Ansible through `pip` to avoid having to use package manager
+- [ ] Migrate distribution specific tasks to Ansible Roles instead
+- [ ] Apply Ansible `handler` pattern to software that need more setup than just stowing dotfiles
+- [ ] Setup users too
+- [ ] Import Firefox config
+- [ ] Create and run role for MacOS
+- [ ] Add github Action for continous testing
+- [ ] Make a ansible task that sets up a cronjob to keep machines synced
