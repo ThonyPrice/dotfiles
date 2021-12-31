@@ -12,14 +12,16 @@
     when: ansible_distribution == "Archlinux"
 
 # Stow configs
-- name: Stow dotfiles | base
+- hosts: workstation
+  name: Stow dotfiles | base
   tags: dotfiles, base
   shell: stow {{item}}
   with_items:
     - dots_base
 
 # Stow configs for Arch distributions
-- name: Stow dotfiles | base
+- hosts: workstation
+  name: Stow dotfiles | base
   tags: dotfiles, arch
   shell: stow {{item}}
   with_items:
