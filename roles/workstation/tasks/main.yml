@@ -1,22 +1,22 @@
 - name: install packages
   package:
     name:
-      - stow
-      # - acpilight 
+      - acpilight 
       - gtop
-      # - fish
-      # - kitty  
+      - fish
+      - kitty  
       - neovim
-      # - npm
-      # - python-pip
-      # - ranger
-      # - rofi
-      # - slack-desktop
-      # - spotify
-      # - stow
-      # - ttf-jetbrains-mono
+      - npm
+      - python-pip
+      - ranger
+      - rofi
+      - slack-desktop
+      - spotify
+      - stow
+      - ttf-jetbrains-mono
 
-- name: Symlink neovim dotfiles
-  shell: stow -d /home/thony/Git/dotfiles/.config/{{item}} -t /home/thony/.config/{{item}}
-  with_items:
-    - nvim
+- name: Vim | Setup backup dir
+  shell: mkdir -p /home/thony/.local/share/nvim/backup
+
+- name: Vim | Setup pynvim
+  shell: python3 -m pip install --user --upgrade pynvim

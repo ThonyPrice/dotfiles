@@ -11,9 +11,25 @@
     changed_when: False
     when: ansible_distribution == "Archlinux"
 
+# Stow configs
+- name: Stow dotfiles | base
+  tags: dotfiles, base
+  shell: stow {{item}}
+  with_items:
+    - dots_base
+
+# Stow configs for Arch distributions
+- name: Stow dotfiles | base
+  tags: dotfiles, arch
+  shell: stow {{item}}
+  with_items:
+    - dots_arch
+  when: ansible_distribution == "Archlinux"
+
 # Run roles
 - hosts: workstation
   tags: workstation
   become: true
   roles:
     - workstation
+  when: ansible_distribution == "Archlinux"
