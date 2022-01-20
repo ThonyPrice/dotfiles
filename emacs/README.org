@@ -1,0 +1,8 @@
+#+TITLE: Readme
+
+* Notes
+** MacOS
+Copy Emacs app to ~/Applications~ to enable indexing by Spotligt/Alfred
+#+BEGIN_SRC
+sudo cp -r /opt/homebrew/Cellar/emacs-mac/emacs-27.2-mac-8.2/Emacs.app /Applications
+#+END_SRC
