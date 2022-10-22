@@ -2,7 +2,22 @@
 
 * Notes
 ** MacOS
-Copy Emacs app to ~/Applications~ to enable indexing by Spotligt/Alfred
+Install Emacs
 #+BEGIN_SRC
-sudo cp -r /opt/homebrew/Cellar/emacs-mac/emacs-27.2-mac-8.2/Emacs.app /Applications
+# dependencies
+brew install git ripgrep coreutils fd
+# Installs clang
+xcode-select --install
+brew install emacs-plus --with-no-titlebar --with-modern-icon
+#+END_SRC
+
+Add Emacs Doom (Clean install if ~/.doom~ is not present already)
+#+BEGIN_SRC
+git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
+~/.emacs.d/bin/doom install
+#+END_SRC
+
+Add Emacs to ~/Applications~ to enable indexing by Spotlight/Alfred
+#+BEGIN_SRC
+sudo cp -r /opt/homebrew/opt/emacs-plus@27/Emacs.app /Applications
 #+END_SRC
