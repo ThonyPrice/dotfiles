@@ -1,0 +1,19 @@
+- name: install nitrogen
+  package:
+    name:
+      - nitrogen
+
+- name: check wallpapers directory symlink
+  stat: path=$HOME/wallpapers
+  register: dir_present
+
+- name: remove wallpaper dir (if not symlinked)
+  file: path=$HOME/wallpaper state=absent
+  when: dir_present.stat.isdir | default(false)
+
+- name: symlink wallpaper dir
+  file: path=$HOME/wallpapers
+        src=$HOME/dotfiles/wallpapers
+        state=link
+        force=yes
+  become: false

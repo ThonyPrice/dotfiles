@@ -1,22 +1,48 @@
-- name: install packages
-  package:
-    name:
-      - acpilight 
-      - gtop
-      - fish
-      - kitty  
-      - neovim
-      - npm
-      - python-pip
-      - ranger
-      - rofi
-      - slack-desktop
-      - spotify
-      - stow
-      - ttf-jetbrains-mono
+- name: configure keybindings
+  tags: keybindings
+  import_tasks: keybindings.yml
+  when: ansible_distribution == "Archlinux"
 
-- name: Vim | Setup backup dir
-  shell: mkdir -p /home/thony/.local/share/nvim/backup
+- name: install fish
+  tags: shell,fish
+  import_tasks: fish.yml
 
-- name: Vim | Setup pynvim
-  shell: python3 -m pip install --user --upgrade pynvim
+- name: install nvim
+  tags: nvim,vim
+  import_tasks: nvim.yml
+
+- name: install kitty
+  tags: terminal,kitty
+  import_tasks: kitty.yml
+
+- name: setup wm
+  tags: wm,bspwm,sxhkd,polybar
+  import_tasks: arch-wm.yml
+  when: ansible_distribution == "Archlinux"
+
+- name: sync wallpapers
+  tags: wallpapers
+  import_tasks: wallpaper.yml
+
+# - name: install pkgs
+  # package:
+    # name:
+      # - acpilight 
+      # - gtop
+      # - fish
+      # - kitty  
+      # - neovim
+      # - npm
+      # - python-pip
+      # - ranger
+      # - rofi
+      # - slack-desktop
+      # - spotify
+      # - stow
+      # - ttf-jetbrains-mono
+
+# - name: Vim | Setup backup dir
+  # shell: mkdir -p /home/thony/.local/share/nvim/backup
+
+# - name: Vim | Setup pynvim
+  # shell: python3 -m pip install --user --upgrade pynvim
