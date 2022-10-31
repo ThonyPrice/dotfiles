@@ -1,3 +1,11 @@
+- name: emacs
+  tags: emacs
+  import_tasks: emacs.yml
+
+- name: software
+  tags: software
+  import_tasks: software.yml
+
 - name: configure keybindings
   tags: keybindings
   import_tasks: keybindings.yml

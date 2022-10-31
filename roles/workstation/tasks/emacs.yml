@@ -1,0 +1,21 @@
+- name: Emacs | Present
+  package:
+    name: 
+      - emacs
+      - ripgrep
+      - fd
+
+- name: Emacs | Symlink Doom | Check if ~/.doom present
+  stat: path=$HOME/.doom
+  register: present
+
+- name: Emacs | Symlink Doom | Remove if ~/.doom not symlinked
+  file: path=$HOME/.doom state=absent
+  when: present.stat.isdir is defined and present.stat.isdir
+
+- name: Emacs | Symlink Doom
+  file: path=$HOME/.doom
+        src=$HOME/dotfiles/roles/workstation/emacs/doom
+        state=link
+        force=yes
+  become: false

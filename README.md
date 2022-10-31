@@ -1,15 +1,45 @@
 # Dotfiles
-💻 Personal dotfiles setup, managed with Ansible and GNU Stow.
 
-## Description
-Lorem ipsum...
+Ansible playbook to configure and customize systems. 💻
+The purpose is a single command to configure systems in an repeatable way.
 
-## Todo
-- [ ] Use (and document) how to use Ansible through `pip` to avoid having to use package manager
-- [ ] Migrate distribution specific tasks to Ansible Roles instead
-- [ ] Apply Ansible `handler` pattern to software that need more setup than just stowing dotfiles
-- [ ] Setup users too
-- [ ] Import Firefox config
-- [ ] Create and run role for MacOS
-- [ ] Add github Action for continous testing
-- [ ] Make a ansible task that sets up a cronjob to keep machines synced
+The playbook is compatible with:
+- Arch
+- MacOS _(work in progress)_
+
+# Description
+
+First, check prerequisites.
+Then, the playbook is bootstrapped by the `dotfiles.sh` command in `/bin/`.
+The **dotfiles scripts does three things:**
+
+1. Install Ansible (if not present)
+2. Create `.ssh` directory and keys (if not present)
+3. Run the Ansible playbook
+
+## The Playbook
+
+Depending on the host, the playbook run any of the roles:
+
+- **base** - Configuration suitable for _any_ system.
+- **workstation** - Configuration I want for non-server systems.
+
+Both roles include tasks that:
+- Configure the system
+- Install all defined programs and software
+- Symlink defined configurations (dotfiles)
+- Configures all users
+
+# Prerequisites
+
+_The tasks need to be carried out manually before running the playbook._
+_Future work should be done to automate these tasks within the Ansible play._
+
+These are required for pulling Ansible packages used in the play.
+
+``` sh
+$ ansible-galaxy install -r requirements
+```
+
+## Tooling To be Included
+- bluberry

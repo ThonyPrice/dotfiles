@@ -20,4 +20,4 @@ if ! [ -x "$(command -v ansible)" ]; then
 fi
 
 cd "$DOTFILES_DIR"
-ansible-playbook --diff "$DOTFILES_DIR/main.yml" --ask-become-pass 
+ansible-playbook --diff "$DOTFILES_DIR/main.yml" --ask-become-pass
