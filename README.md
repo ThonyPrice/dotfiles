@@ -41,5 +41,20 @@ These are required for pulling Ansible packages used in the play.
 $ ansible-galaxy install -r requirements
 ```
 
+# Post Playbook
+
+_These tasks are required after the playbook to finalize some installation/configuration._
+_Similar to the prerequisites, these should be automated within the playbook._
+
+Finalize the Doom Emacs installation:
+
+``` sh
+$ ~/.emacs.d/bin/doom install
+```
+
 ## Tooling To be Included
+
+These tools are currently in a testing phase and might be included in the future.
+
 - bluberry
+
