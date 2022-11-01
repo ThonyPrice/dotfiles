@@ -40,7 +40,7 @@
 (setq org-directory "~/Git/Org/")
 
 ;; Set projectile discover directory
-(setq projectile-project-search-path '("~/Git/"))
+(setq projectile-project-search-path '("~/git/"))
 
 ;; Set up code review tooling
 (setq code-review-fill-column 80)
