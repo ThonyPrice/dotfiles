@@ -63,4 +63,6 @@ $ ~/.emacs.d/bin/doom install
 
 These tools are currently in a testing phase and might be included in the future.
 
-- bluberry (bluetooth cli)
+- Blutooth manager:
+  - Backend - Install =bluez= and =bluez-utils=. Enable systemctl startup
+  - Frontend - Bluberry
