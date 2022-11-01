@@ -1,0 +1,2 @@
+- name: Map caps lock to esc
+  ansible.builtin.shell: setxkbmap -option caps:escape

@@ -1,0 +1,31 @@
+- name: Emacs | Present
+  package:
+    name: 
+      - emacs
+      - ripgrep
+      - fd
+
+- name: Emacs | Symlink Doom | Check if ~/.doom present
+  stat: path=$HOME/.doom
+  register: present
+
+- name: Emacs | Symlink Doom | Remove if ~/.doom not symlinked
+  file: path=$HOME/.doom state=absent
+  when: present.stat.isdir is defined and present.stat.isdir
+
+- name: Emacs | Symlink Doom
+  file: path=$HOME/.doom.d
+        src=$HOME/dotfiles/roles/workstation/files/emacs/.doom.d
+        state=link
+        force=yes
+  become: false
+
+# - name: Emacs | Clone Doom dependency
+  # TODO: Only clone if the directory is not present
+  # command: git clone https://github.com/hlissner/doom-emacs $HOME/.emacs.d
+  # become: false
+
+# - name: Emacs | Run Doom Install
+  # TODO: Only run installer if not yet installed
+  # EDIT: The installer awaits input, run manually for now
+  # command: ~/.emacs.d/bin/doom install

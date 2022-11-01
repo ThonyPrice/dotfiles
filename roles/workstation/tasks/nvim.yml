@@ -1,0 +1,22 @@
+- name: install neovim
+  package:
+    name:
+      - neovim
+
+- name: install plug
+  ansible.builtin.shell: sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+
+- name: check nvim symlink
+  stat: path=$HOME/.config/nvim
+  register: nvim_present
+
+- name: remove nvim dir (if not symlinked)
+  file: path=$HOME/.config/nvim state=absent
+  when: nvim_present.stat.isdir is defined and nvim_present.stat.isdir
+
+- name: symlink nvim config
+  file: path=$HOME/.config/nvim
+        src=$HOME/dotfiles/roles/workstation/files/nvim
+        state=link
+        force=yes
+  become: false

@@ -1,0 +1,3 @@
+collections:
+  # Manage AUR pkgs with helpers such as yay
+  - name: kewlfft.aur

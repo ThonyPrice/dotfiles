@@ -1,0 +1,19 @@
+- name: install kitty
+  package:
+    name:
+      - kitty
+
+- name: check kitty symlink
+  stat: path=$HOME/.config/kitty
+  register: kitty_present
+
+- name: remove kitty dir (if not symlinked)
+  file: path=$HOME/.config/kitty state=absent
+  when: kitty_present.stat.isdir is defined and kitty_present.stat.isdir
+
+- name: symlink kitty config
+  file: path=$HOME/.config/kitty
+        src=$HOME/dotfiles/roles/workstation/files/kitty
+        state=link
+        force=yes
+  become: false

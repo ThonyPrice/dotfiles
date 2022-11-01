@@ -1,0 +1,66 @@
+#+TITLE: Dotfiles
+
+Ansible playbook to configure and customize systems. 💻
+The purpose is a single command to configure systems in an repeatable way.
+
+The playbook is compatible with:
+
+- Arch systems
+- MacOS /(work in progress)/
+
+* Description
+
+The meat of this repository is a giant Ansible playbook.
+It defines /my personal/ system configuration including roles, programs, config, etc.
+
+The playbook is bootstrapped by one command in ~/bin/dotfiles.sh~.
+It achieves three things:
+
+1. Install Ansible (if not present).
+2. Create `.ssh` directory and keys (if not present).
+3. Run the Ansible playbook...
+
+** The Playbook
+
+Depending on the host, the playbook run any of the roles:
+
+- base :: Configuration suitable for all systems.
+- workstation :: This configuration is applied on top of =base= for non-server systems.
+
+Both roles include tasks that:
+- Configure the system (e.g. keybindings, themes, package manager)
+- Install all defined programs and software (e.g. editors, development tooling)
+- Symlink defined configurations (i.e. dotfiles)
+- Configures all users
+
+** Prerequisites
+
+*Future work:* Automate these tasks within the Ansible play.
+
+Pull Ansible packages used in the play:
+
+#+BEGIN_SRC shell
+``` shell
+$ ansible-galaxy install -r requirements
+```
+#+END_SRC shell
+
+** Post Playbook
+
+These tasks are required after the playbook to finalize some installation/configuration.
+
+*Future work:* Similar to the prerequisites, these should be automated within the playbook.
+
+Finalize the Doom Emacs installation:
+
+#+BEGIN_SRC shell
+``` shell
+$ ~/.emacs.d/bin/doom install
+```
+#+END_SRC shell
+
+* Tooling To be Included
+
+These tools are currently in a testing phase and might be included in the future.
+
+- bluberry (bluetooth cli)

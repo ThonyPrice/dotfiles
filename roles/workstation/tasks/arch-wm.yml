@@ -1,0 +1,58 @@
+- name: install fish
+  package:
+    name:
+      - bspwm
+      - sxhkd
+      - polybar
+
+- name: check bspwm symlink
+  stat: path=$HOME/.config/bspwm
+  register: bspwm_present
+
+- name: remove bspwm dir (if not symlinked)
+  file: path=/home/thony/.config/bspwm state=absent
+  # when: bspwm_present.stat.isdir | default(false)
+
+- name: symlink bspwm config
+  file: path=$HOME/.config/bspwm
+        src=$HOME/dotfiles/roles/workstation/files/bspwm
+        state=link
+        force=yes
+  become: false
+
+- name: check sxhkd symlink
+  stat: path=$HOME/.config/sxhkd
+  register: sxhkd_present
+
+- name: remove sxhkd dir (if not symlinked)
+  file: path=/home/thony/.config/sxhkd state=absent
+  # when: sxhkd_present.stat.isdir | default(false)
+
+- name: symlink sxhkd config
+  file: path=$HOME/.config/sxhkd
+        src=$HOME/dotfiles/roles/workstation/files/sxhkd
+        state=link
+        force=yes
+  become: false
+
+- name: check polybar symlink
+  stat: path=$HOME/.config/polybar
+  register: polybar_present
+
+- name: remove polybar dir (if not symlinked)
+  file: path=/home/thony/.config/polybar state=absent
+  # when: polybar_present.stat.isdir | default(false)
+
+- name: symlink polybar config
+  file: path=$HOME/.config/polybar
+        src=$HOME/dotfiles/roles/workstation/files/polybar
+        state=link
+        force=yes
+  become: false
+
+- name: install fonts
+  package:
+    name:
+      - ttf-jetbrains-mono
+      - ttf-font-awesome
+      - ttf-sourcecodepro-nerd
