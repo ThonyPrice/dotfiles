@@ -66,3 +66,4 @@ These tools are currently in a testing phase and might be included in the future
 - Blutooth manager:
   - Backend - Install =bluez= and =bluez-utils=. Enable systemctl startup
   - Frontend - Bluberry
+  - fwupd - Firmware upgrade manager
