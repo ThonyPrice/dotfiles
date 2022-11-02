@@ -95,9 +95,9 @@ ctrl + alt + c
 #ctrl + alt + i
 #     nitrogen
 
-#arcolinux-logout
-#ctrl + alt + k
-#     arcolinux-logout
+#i3 Lock
+ctrl + alt + k
+    /home/thony/.config/bspwm/scripts/i3lock-fancy/i3lock-fancy.sh
 
 #arcolinux-logout
 ctrl + alt + l
