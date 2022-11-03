@@ -1,3 +1,7 @@
+- name: spotify
+  tags: spotify
+  import_tasks: spotify.yml
+
 - name: emacs
   tags: emacs
   import_tasks: emacs.yml

@@ -1,0 +1,21 @@
+- name: Install Spotify
+  kewlfft.aur.aur:
+    use: yay
+    name:
+      - spotify
+
+- name: Check is Spicetify installed
+  stat: path=$HOME/.spicetify
+  register: spicetify_exist
+
+- name: Install and configure Spicetify
+  shell: |
+    curl -fsSL https://raw.githubusercontent.com/spicetify/spicetify-cli/master/install.sh | sh
+    chmod a+wr /opt/spotify
+    chmod a+wr /opt/spotify/Apps -R
+    source $PATH
+    spicetify
+    curl -fsSL https://raw.githubusercontent.com/spicetify/spicetify-marketplace/main/resources/install.sh | sh
+    spicetify backup apply enable-devtools
+    spicetify update
+  when: not spicetify_exist.stat.isdir | default(true)

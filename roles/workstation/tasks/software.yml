@@ -3,5 +3,4 @@
     use: yay
     name:
       - slack-desktop
-      - spotify
   become: false
