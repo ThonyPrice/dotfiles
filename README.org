@@ -59,6 +59,14 @@ $ ~/.emacs.d/bin/doom install
 ```
 #+END_SRC shell
 
+* What's Included?
+
+This segment provide a brief description of setup and configs.
+
+** Spicetify
+
+Theming utility for spotify client.
+
 * Tooling To be Included
 
 These tools are currently in a testing phase and might be included in the future.
