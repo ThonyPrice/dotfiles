@@ -1,0 +1,24 @@
+- name: install firefox
+  package:
+    name:
+      - firefox
+
+- name: Check for betterfox profile
+  find:
+    paths: /home/thony/.mozilla/firefox/
+    patterns: '[\.betterfox]'
+    file_type: directory
+  register: betterfox_profile
+
+- name: Create betterfox profile
+  shell: |
+    firefox --createprofile betterfox
+  when: not betterfox_profile.matched == 0
+  become: false
+
+# - name: symlink firefox config
+#   file: path=$HOME/.config/firefox
+#         src=$HOME/dotfiles/roles/workstation/files/firefox
+#         state=link
+#         force=yes
+#   become: false
