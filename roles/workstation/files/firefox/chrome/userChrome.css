@@ -1,0 +1,12 @@
+/* hides the native tabs */
+#TabsToolbar {
+  visibility: collapse;
+}
+/* hides the titlebar */
+#titlebar {
+  visibility: collapse;
+}
+/* hides the sidebar header */
+#sidebar-header {
+  visibility: collapse !important;
+}
