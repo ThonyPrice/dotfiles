@@ -43,6 +43,11 @@
   import_tasks: arch-wm.yml
   when: ansible_distribution == "Archlinux"
 
+- name: notifications
+  tags: notifications,duinst
+  import_tasks: dunst.yml
+  when: ansible_distribution == "Archlinux"
+
 - name: sync wallpapers
   tags: wallpapers
   import_tasks: wallpaper.yml

@@ -1,0 +1,21 @@
+- name: Notifications | Dunst installed
+  package:
+    name:
+      - dunst
+
+- name: Notifications | Dunst stat config dir
+  stat:
+    path: ~/.config/dunst
+  register: link
+
+- name: Notifications | Dunst rm config dir (if not symlinked)
+  file:
+    path: ~/.config/dunst
+    state: absent
+  when: link.stat.isdir is defined and not link.stat.islnk
+
+- name: Notifications | Dunst config symlinked
+  file: path=$HOME/.config/dunst
+        src=$HOME/dotfiles/roles/workstation/files/dunst
+        state=link
+        force=yes
