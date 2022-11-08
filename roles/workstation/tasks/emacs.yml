@@ -6,24 +6,33 @@
       - fd
 
 - name: Emacs | Symlink Doom | Check if ~/.doom present
-  stat: path=$HOME/.doom
-  register: present
+  stat:
+    path: ~/.doom
+  register: link
 
 - name: Emacs | Symlink Doom | Remove if ~/.doom not symlinked
-  file: path=$HOME/.doom state=absent
-  when: present.stat.isdir is defined and present.stat.isdir
+  file:
+    path: ~/.doom
+    state: absent
+  when: link.stat.isdir is defined and not link.stat.islnk
 
 - name: Emacs | Symlink Doom
   file: path=$HOME/.doom.d
         src=$HOME/dotfiles/roles/workstation/files/emacs/.doom.d
         state=link
         force=yes
-  become: false
 
-# - name: Emacs | Clone Doom dependency
-  # TODO: Only clone if the directory is not present
-  # command: git clone https://github.com/hlissner/doom-emacs $HOME/.emacs.d
-  # become: false
+- name: Emacs | Clone ~/.emacs.d | Check if ~/.emacs.d present
+  stat:
+    path: ~/.emacs.d
+  register: emacs_dir
+
+- name: Emacs | Clone ~/.emacs.d (if not present)
+  git:
+    repo: 'https://github.com/hlissner/doom-emacs.git'
+    dest: ~/.emacs.d
+    update: no
+  when: not emacs_dir.stat.exists
 
 # - name: Emacs | Run Doom Install
   # TODO: Only run installer if not yet installed

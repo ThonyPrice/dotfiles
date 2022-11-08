@@ -1,58 +1,63 @@
-- name: install fish
+- name: WM | Bspwm, Sxhkd, Polybar, and Fonts Installed
   package:
     name:
       - bspwm
       - sxhkd
       - polybar
-
-- name: check bspwm symlink
-  stat: path=$HOME/.config/bspwm
-  register: bspwm_present
-
-- name: remove bspwm dir (if not symlinked)
-  file: path=/home/thony/.config/bspwm state=absent
-  # when: bspwm_present.stat.isdir | default(false)
-
-- name: symlink bspwm config
-  file: path=$HOME/.config/bspwm
-        src=$HOME/dotfiles/roles/workstation/files/bspwm
-        state=link
-        force=yes
-  become: false
-
-- name: check sxhkd symlink
-  stat: path=$HOME/.config/sxhkd
-  register: sxhkd_present
-
-- name: remove sxhkd dir (if not symlinked)
-  file: path=/home/thony/.config/sxhkd state=absent
-  # when: sxhkd_present.stat.isdir | default(false)
-
-- name: symlink sxhkd config
-  file: path=$HOME/.config/sxhkd
-        src=$HOME/dotfiles/roles/workstation/files/sxhkd
-        state=link
-        force=yes
-  become: false
-
-- name: check polybar symlink
-  stat: path=$HOME/.config/polybar
-  register: polybar_present
-
-- name: remove polybar dir (if not symlinked)
-  file: path=/home/thony/.config/polybar state=absent
-  # when: polybar_present.stat.isdir | default(false)
-
-- name: symlink polybar config
-  file: path=$HOME/.config/polybar
-        src=$HOME/dotfiles/roles/workstation/files/polybar
-        state=link
-        force=yes
-  become: false
-
-- name: install fonts
-  package:
-    name:
       - ttf-jetbrains-mono
       - ttf-font-awesome
       - ttf-sourcecodepro-nerd
+
+# --- Bspwm ---
+- name: WM | Bspwm config | Stat symlink
+  stat:
+    path: ~/.config/bspwm
+  register: link_bspwm
+
+- name: WM | Bspwm config | Rm dir (if not symlinked)
+  file:
+    path: ~/.config/bspwm
+    state: absent
+  when: link_bspwm.stat.isdir is defined and not link_bspwm.stat.islnk
+
+- name: WM | Bspwm config | Mk synlink
+  file: path=~/.config/bspwm
+        src=~/dotfiles/roles/workstation/files/bspwm
+        state=link
+        force=yes
+
+# --- Sxhkd ---
+- name: WM | Sxhkd config | Stat symlink
+  stat:
+    path: ~/.config/sxhkd
+  register: link_sxhkd
+
+- name: WM | Sxhkd config | Rm dir (if not symlinked)
+  file:
+    path: ~/.config/sxhkd
+    state: absent
+  when: link_sxhkd.stat.isdir is defined and not link_sxhkd.stat.islnk
+
+- name: WM | Sxhkd config | Mk symlink
+  file: path=~/.config/sxhkd
+        src=~/dotfiles/roles/workstation/files/sxhkd
+        state=link
+        force=yes
+
+# --- Polybar ---
+- name: WM | Polybar config | Stat symlink
+  stat:
+    path: ~/.config/polybar
+  register: link_polybar
+
+- name: WM | Polybar config | Rm dir (if not symlinked)
+  file:
+    path: ~/.config/polybar
+    state: absent
+  when: link_polybar.stat.isdir is defined and not link_polybar.stat.islnk
+
+- name: WM | Polybar config | Mk symlink
+  file: path=~/.config/polybar
+        src=~/dotfiles/roles/workstation/files/polybar
+        state=link
+        force=yes

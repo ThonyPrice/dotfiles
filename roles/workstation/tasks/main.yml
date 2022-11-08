@@ -1,35 +1,42 @@
-- name: firefox
-  tags: firefox
-  import_tasks: firefox.yml
+# --- Tasks to be migrated for "Base" role ---
+- name: git
+  tags: git
+  import_tasks: git.yml
 
-- name: spotify
-  tags: spotify
-  import_tasks: spotify.yml
-
-- name: emacs
-  tags: emacs
-  import_tasks: emacs.yml
-
-- name: software
-  tags: software
-  import_tasks: software.yml
-
-- name: configure keybindings
+- name: Keybindings
   tags: keybindings
   import_tasks: keybindings.yml
   when: ansible_distribution == "Archlinux"
 
-- name: install fish
-  tags: shell,fish
-  import_tasks: fish.yml
+- name: Terminal
+  tags: terminal,kitty
+  import_tasks: kitty.yml
 
 - name: install nvim
   tags: nvim,vim
   import_tasks: nvim.yml
 
-- name: install kitty
-  tags: terminal,kitty
-  import_tasks: kitty.yml
+- name: install fish
+  tags: shell,fish
+  import_tasks: fish.yml
+
+# --- Tasks in Workstation role ---
+- name: emacs
+  tags: emacs
+  import_tasks: emacs.yml
+
+- name: firefox
+  tags: firefox
+  import_tasks: firefox.yml
+
+- name: software
+  tags: software
+  import_tasks: software.yml
+
+- name: spotify
+  tags: spotify
+  import_tasks: spotify.yml
+
 
 - name: setup wm
   tags: wm,bspwm,sxhkd,polybar
@@ -56,9 +63,3 @@
       # - spotify
       # - stow
       # - ttf-jetbrains-mono
-
-# - name: Vim | Setup backup dir
-  # shell: mkdir -p /home/thony/.local/share/nvim/backup
-
-# - name: Vim | Setup pynvim
-  # shell: python3 -m pip install --user --upgrade pynvim

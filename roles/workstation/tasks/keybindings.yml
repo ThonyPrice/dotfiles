@@ -1,2 +1,3 @@
-- name: Map caps lock to esc
-  ansible.builtin.shell: setxkbmap -option caps:escape
+- name: Keybindings | Map Caps lock to Esc
+  shell: setxkbmap -option caps:escape
+  changed_when: false
