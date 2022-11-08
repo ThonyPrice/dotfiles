@@ -1,3 +1,7 @@
+- name: git
+  tags: git
+  import_tasks: git.yml
+
 - name: firefox
   tags: firefox
   import_tasks: firefox.yml

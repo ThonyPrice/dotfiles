@@ -1,0 +1,11 @@
+- name: Git | Install
+  package:
+    name:
+      - git
+
+- name: Git | Symlink .gitconfig
+  file: path=/home/thony/.gitconfig
+        src=/home/thony/dotfiles/roles/workstation/files/git/.gitconfig
+        state=link
+        force=yes
+  become: false
