@@ -1,3 +1,7 @@
+- name: firefox
+  tags: firefox
+  import_tasks: firefox.yml
+
 - name: spotify
   tags: spotify
   import_tasks: spotify.yml
