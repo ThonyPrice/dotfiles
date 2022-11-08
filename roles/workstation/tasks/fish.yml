@@ -1,27 +1,33 @@
-- name: install fish
+- name: Shell | Fish installed
   package:
     name:
       - fish
 
-- name: check fish symlink
-  stat: path=$HOME/.config/fish
-  register: fish_present
+- name: Shell | Fish stat config dir
+  stat:
+    path: ~/.config/fish
+  register: link
 
-- name: remove fish dir (if not symlinked)
-  file: path=$HOME/.config/fish state=absent
-  when: fish_present.stat.isdir is defined and fish_present.stat.isdir
+- name: Shell | Fish rm config dir (if not symlinked)
+  file:
+    path: ~/.config/fish
+    state: absent
+  when: link.stat.isdir is defined and not link.stat.islnk
 
-- name: symlink fish config
+- name: Shell | Fish config symlinked
   file: path=$HOME/.config/fish
         src=$HOME/dotfiles/roles/workstation/files/fish
         state=link
         force=yes
-  become: false
 
-- name: setup | determine shell executable location
-  command: which fish
-  register: fish
+- name: Shell | Stat present login shell
+  shell: |
+    getent passwd $LOGNAME | cut -d: -f7
+  register: shell
+  changed_when: false
 
-- name: configure | change default shell
-  command: chsh -l {{fish.stdout}}
-
+- name: Shell | Set fish as default shell (if not configured)
+  shell: |
+    chsh -s $(which fish)
+  when: not shell.stdout is search('fish')
+  become: true

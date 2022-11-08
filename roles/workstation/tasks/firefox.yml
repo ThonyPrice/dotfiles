@@ -1,36 +1,34 @@
-- name: install firefox
+- name: Browser | Firefox installed
   package:
     name:
       - firefox
 
-- name: Check for betterfox profile
+- name: Browser | Firefox profile | Betterfox stat profile
   ansible.builtin.find:
-    paths: /home/thony/.mozilla/firefox
+    paths: ~/.mozilla/firefox
     patterns: '.*betterfox'
     use_regex: true
     file_type: directory
   register: betterfox_profile
 
-- name: Create betterfox profile
+- name: Browser | Firefox profile | Betterfox create profile (if not present)
   shell: |
     firefox --createprofile betterfox
   when: betterfox_profile.matched == 0
-  become: false
 
-- name: Get betterfox profile directory
+- name: Browser | Firefox profile | Betterfox get profile path
   find:
-    paths: /home/thony/.mozilla/firefox
+    paths: ~/.mozilla/firefox
     patterns: '.*betterfox'
     use_regex: true
     file_type: directory
   register: betterfox_profile_dir
 
-- name: Symlink betterfox configs
+- name: Browser | Firefox profile | Betterfox symlink profile configs
   file: path="{{ betterfox_profile.files.0.path }}/{{ item }}"
-        src="/home/thony/dotfiles/roles/workstation/files/firefox/{{ item }}"
+        src="~/dotfiles/roles/workstation/files/firefox/{{ item }}"
         state=link
         force=yes
   loop:
     - user.js
     - chrome
-  become: false
