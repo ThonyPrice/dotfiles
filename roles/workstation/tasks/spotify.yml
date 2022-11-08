@@ -1,8 +1,14 @@
-- name: Install Spotify
+- name: Install Spotify (Arch)
   kewlfft.aur.aur:
     use: yay
     name:
       - spotify
+  when: ansible_distribution == "Archlinux"
+
+- name: Install Spotify (MacOS)
+  shell: |
+    echo "TODO: Install Spotify for MacOS"
+  when: ansible_distribution == 'MacOSX'
 
 - name: Check is Spicetify installed
   stat: path=/home/thony/.spicetify
@@ -14,15 +20,16 @@
   when: not spicetify_exist.stat.exists
   become: false
 
-- name: Init Spicetify
+- name: Chmod Spicetify for Spotify (Arch)
   shell: |
     chmod a+wr /opt/spotify
     chmod a+wr /opt/spotify/Apps -R
-  when: not spicetify_exist.stat.exists
+  when: not spicetify_exist.stat.exists and ansible_distribution == "Archlinux"
 
 - name: Configure Spicetify
   shell: |
     spicetify
+    # Install marketplace to configure themes inside the Spotify client
     curl -fsSL https://raw.githubusercontent.com/spicetify/spicetify-marketplace/main/resources/install.sh | sh
     spicetify backup apply enable-devtools
     spicetify update
