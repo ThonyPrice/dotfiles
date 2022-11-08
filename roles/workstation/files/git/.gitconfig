@@ -188,12 +188,10 @@
 
 	insteadOf = "gist:"
 
-# Uncomment if you want fetch to also get all github pull requests, this is rather
-# large on big repos.
-#[remote "origin"]
-	#fetch = +refs/pull/*/head:refs/remotes/origin/pull/*
-
 [commit]
-	gpgsign = true
+
+	gpgsign = false
+
 [pull]
-	rebase = true
+
+	# rebase = true
