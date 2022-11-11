@@ -8,6 +8,12 @@
   import_tasks: keybindings.yml
   when: ansible_distribution == "Archlinux"
 
+- name: Periphials
+  tags: periphials
+  import_tasks: periphials.yml
+  when: ansible_distribution == "Archlinux"
+  become: true
+
 - name: Terminal
   tags: terminal,kitty
   import_tasks: kitty.yml
