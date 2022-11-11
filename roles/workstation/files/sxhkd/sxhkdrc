@@ -122,8 +122,8 @@ ctrl + alt + k
     /home/thony/.config/bspwm/scripts/i3lock-fancy/i3lock-fancy.sh
 
 #Scrot
-Print
-    scrot 'Screenshot-%Y-%m-%d-%s_$wx$h.jpg' -e 'mv $f $$(xdg-user-dir PICTURES)'
+#Print
+    #scrot 'Screenshot-%Y-%m-%d-%s_$wx$h.jpg' -e 'mv $f $$(xdg-user-dir PICTURES)'
 
 #################################################################
 #     MULTIMEDIA KEYS

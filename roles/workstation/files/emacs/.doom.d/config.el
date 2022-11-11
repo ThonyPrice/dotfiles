@@ -37,7 +37,7 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/Git/Org/")
+(setq org-directory "~/git/Org/")
 
 ;; Set projectile discover directory
 (setq projectile-project-search-path '("~/git/"))

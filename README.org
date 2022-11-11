@@ -88,3 +88,7 @@ These tools are currently in a testing phase and might be included in the future
     #+BEGIN_SRC shell
     $ curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
     #+END_SRC
+- Remove horrible system "beep" (only required on Arch and Lenovo?)
+  #+BEGIN_SRC shell
+  $ sudo echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
+  #+END_SRC
