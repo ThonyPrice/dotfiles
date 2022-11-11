@@ -22,15 +22,16 @@
         state=link
         force=yes
 
-- name: Emacs | Clone ~/.emacs.d | Check if ~/.emacs.d present
+- name: Emacs | Clone Doom | Check if ~/.emacs.d/bin/doom present
   stat:
-    path: ~/.emacs.d
+    path: ~/.emacs.d/bin/doom
   register: emacs_dir
 
-- name: Emacs | Clone ~/.emacs.d (if not present)
+- name: Emacs | Clone Doom (if not present)
   git:
-    repo: 'https://github.com/hlissner/doom-emacs.git'
+    repo: 'https://github.com/doomemacs/doomemacs'
     dest: ~/.emacs.d
+    depth: 1
     update: no
   when: not emacs_dir.stat.exists
 
