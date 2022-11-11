@@ -23,6 +23,7 @@ nm-applet --indicator &
 xsetroot -cursor_name left_ptr &
 # Keyboard
 setxkbmap -option caps:escape
+xmodmap -e 'keysym Print = Super_L'
 # Low battery notifier
 ~/.config/bspwm/scripts/low_bat_notifier.sh
 
