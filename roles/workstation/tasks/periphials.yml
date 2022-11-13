@@ -3,6 +3,7 @@
     use: yay
     name:
       - logiops
+  become: true
 
 - name: Periphials | LogiOptions | Sync config
   file: path=/etc/logid.cfg
