@@ -1,3 +1,4 @@
+---
 - name: Wallpapers | Nitrogen present
   ansible.builtin.package:
     name:

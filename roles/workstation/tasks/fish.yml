@@ -1,3 +1,4 @@
+---
 - name: Shell | Fish installed
   ansible.builtin.package:
     name:

@@ -1,3 +1,4 @@
+---
 - name: Notifications | Dunst installed
   ansible.builtin.package:
     name:

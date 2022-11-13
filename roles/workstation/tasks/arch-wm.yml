@@ -1,3 +1,4 @@
+---
 - name: WM | Bspwm, Sxhkd, Polybar, and Fonts Installed
   ansible.builtin.package:
     name:

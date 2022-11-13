@@ -1,3 +1,4 @@
+---
 - name: Terminal | Kitty installed
   ansible.builtin.package:
     name:

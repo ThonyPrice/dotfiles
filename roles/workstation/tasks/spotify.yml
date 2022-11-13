@@ -1,3 +1,4 @@
+---
 - name: Spotify | Install (Arch)
   kewlfft.aur.aur:
     use: yay

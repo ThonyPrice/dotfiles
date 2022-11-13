@@ -1,3 +1,4 @@
+---
 - name: Periphials | LogiOptions | Install
   kewlfft.aur.aur:
     use: yay

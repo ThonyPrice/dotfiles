@@ -1,3 +1,4 @@
+---
 - name: Browser | Firefox installed
   ansible.builtin.package:
     name:

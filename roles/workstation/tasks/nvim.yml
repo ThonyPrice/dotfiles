@@ -1,3 +1,4 @@
+---
 - name: Neovim | Neovim installed
   ansible.builtin.package:
     name:

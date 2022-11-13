@@ -1,3 +1,4 @@
+---
 - name: Keybindings | Map Caps lock to Esc
   shell: |
     setxkbmap -option caps:escape
