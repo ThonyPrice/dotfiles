@@ -14,7 +14,7 @@
     force: yes
 
 - name: Periphials | LogiOptions | Run on startup
-  systemd:
+  ansible.builtin.systemd:
     enabled: true
     state: started
     name: logid

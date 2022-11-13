@@ -18,7 +18,10 @@
 
 - name: Spotify | Spicetify | Install (if not present)
   ansible.builtin.shell: |
-    curl -fsSL https://raw.githubusercontent.com/spicetify/spicetify-cli/master/install.sh | sh
+    set -o pipefail
+    curl -fsSL \
+    https://raw.githubusercontent.com/spicetify/spicetify-cli/master/install.sh \
+    | sh
   when: not spicetify_exist.stat.exists
   become: false
 
@@ -32,9 +35,11 @@
   ansible.builtin.shell: |
     spicetify
     # Install marketplace to configure themes inside the Spotify client
-    curl -fsSL https://raw.githubusercontent.com/spicetify/spicetify-marketplace/main/resources/install.sh | sh
+    set -o pipefail
+    curl -fsSL \
+    https://raw.githubusercontent.com/spicetify/spicetify-marketplace/main/resources/install.sh \
+    | sh
     spicetify backup apply enable-devtools
     spicetify update
   when: not spicetify_exist.stat.exists
   become: false
-

@@ -1,4 +1,5 @@
-# --- Tasks to be migrated for "Base" role ---
+# ---
+# Tasks to be migrated for "Base" role
 - name: Git
   tags: git
   ansible.builtin.import_tasks: git.yml
@@ -26,7 +27,7 @@
   tags: shell,fish
   ansible.builtin.import_tasks: fish.yml
 
-# --- Tasks in Workstation role ---
+# Tasks in Workstation role
 - name: Emacs
   tags: emacs
   ansible.builtin.import_tasks: emacs.yml
