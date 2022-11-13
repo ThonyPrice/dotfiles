@@ -1,24 +1,25 @@
 - name: Shell | Fish installed
-  package:
+  ansible.builtin.package:
     name:
       - fish
 
 - name: Shell | Fish stat config dir
-  stat:
+  ansible.builtin.stat:
     path: ~/.config/fish
   register: link
 
 - name: Shell | Fish rm config dir (if not symlinked)
-  file:
+  absible.builtin.file:
     path: ~/.config/fish
     state: absent
   when: link.stat.isdir is defined and not link.stat.islnk
 
 - name: Shell | Fish config symlinked
-  file: path=$HOME/.config/fish
-        src=$HOME/dotfiles/roles/workstation/files/fish
-        state=link
-        force=yes
+  absible.builtin.file:
+    path: $HOME/.config/fish
+    src: $HOME/dotfiles/roles/workstation/files/fish
+    state: link
+    force: yes
 
 - name: Shell | Stat present login shell
   shell: |

@@ -6,10 +6,11 @@
   become: true
 
 - name: Periphials | LogiOptions | Sync config
-  file: path=/etc/logid.cfg
-        src=/home/thony/dotfiles/roles/workstation/files/logid/logid.cfg
-        state=link
-        force=yes
+  absible.builtin.file:
+    path: /etc/logid.cfg
+    src: /home/thony/dotfiles/roles/workstation/files/logid/logid.cfg
+    state: link
+    force: yes
 
 - name: Periphials | LogiOptions | Run on startup
   systemd:

@@ -1,21 +1,22 @@
 - name: Terminal | Kitty installed
-  package:
+  ansible.builtin.package:
     name:
       - kitty
 
 - name: Terminal | Kitty stat config dir
-  stat:
+  ansible.builtin.stat:
     path: ~/.config/kitty
   register: link
 
 - name: Terminal | Kitty rm config dir (if not symlinked)
-  file:
+  absible.builtin.file:
     path: ~/.config/kitty
     state: absent
   when: link.stat.isdir is defined and not link.stat.islnk
 
 - name: Terminal | Kitty config symlinked
-  file: path=~/.config/kitty
-        src=~/dotfiles/roles/workstation/files/kitty
-        state=link
-        force=yes
+  absible.builtin.file:
+    path: ~/.config/kitty
+    src: ~/dotfiles/roles/workstation/files/kitty
+    state: link
+    force: yes

@@ -1,10 +1,10 @@
 - name: Neovim | Neovim installed
-  package:
+  ansible.builtin.package:
     name:
       - neovim
 
 - name: Neovim | Plug stat installed
-  stat:
+  ansible.builtin.stat:
     path: ~/.local/share/nvim/site/autoload/plug.vim
   register: plug
 
@@ -15,18 +15,19 @@
   when: not plug.stat.exists
 
 - name: Neovim | Neovim stat config dir
-  stat:
+  ansible.builtin.stat:
     path: ~/.config/nvim
   register: link
 
 - name: Neovim | Neovim rm config dir (if not symlinked)
-  file:
+  absible.builtin.file:
     path: ~/.config/nvim
     state: absent
   when: link.stat.isdir is defined and not link.stat.islnk
 
 - name: Neovim | Neovim config symlinked
-  file: path=~/.config/nvim
-        src=~/dotfiles/roles/workstation/files/nvim
-        state=link
-        force=yes
+  absible.builtin.file:
+    path: ~/.config/nvim
+    src: ~/dotfiles/roles/workstation/files/nvim
+    state: link
+    force: yes

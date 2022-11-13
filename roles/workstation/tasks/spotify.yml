@@ -11,7 +11,8 @@
   when: ansible_distribution == 'MacOSX'
 
 - name: Spotify | Spicetify | Installed stat
-  stat: path=/home/thony/.spicetify
+  ansible.builtin.stat:
+    path: /home/thony/.spicetify
   register: spicetify_exist
 
 - name: Spotify | Spicetify | Install (if not present)

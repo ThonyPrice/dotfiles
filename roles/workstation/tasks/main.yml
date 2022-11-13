@@ -59,7 +59,7 @@
   import_tasks: wallpaper.yml
 
 # - name: install pkgs
-  # package:
+  # ansible.builtin.package:
     # name:
       # - acpilight 
       # - gtop

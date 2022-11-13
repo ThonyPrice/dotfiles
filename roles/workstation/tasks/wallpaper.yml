@@ -1,21 +1,22 @@
 - name: Wallpapers | Nitrogen present
-  package:
+  ansible.builtin.package:
     name:
       - nitrogen
 
 - name: Wallpapers | Stat ~/wallpapers dir
-  stat:
+  ansible.builtin.stat:
     path: ~/wallpapers
   register: link
 
 - name: Wallpapers | Remove ~/wallpapers dir (if not symlinked)
-  file:
+  absible.builtin.file:
     path: ~/wallpaper
     state: absent
   when: link.stat.isdir is defined and not link.stat.islnk
 
 - name: Wallpapers | Symlink ~/wallpapers
-  file: path=~/wallpapers
-        src=~/dotfiles/wallpapers
-        state=link
-        force=yes
+  absible.builtin.file:
+    path: ~/wallpapers
+    src: ~/dotfiles/wallpapers
+    state: link
+    force: yes

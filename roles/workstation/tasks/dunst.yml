@@ -1,21 +1,22 @@
 - name: Notifications | Dunst installed
-  package:
+  ansible.builtin.package:
     name:
       - dunst
 
 - name: Notifications | Dunst stat config dir
-  stat:
+  ansible.builtin.stat:
     path: ~/.config/dunst
   register: link
 
 - name: Notifications | Dunst rm config dir (if not symlinked)
-  file:
+  absible.builtin.file:
     path: ~/.config/dunst
     state: absent
   when: link.stat.isdir is defined and not link.stat.islnk
 
 - name: Notifications | Dunst config symlinked
-  file: path=$HOME/.config/dunst
-        src=$HOME/dotfiles/roles/workstation/files/dunst
-        state=link
-        force=yes
+  absible.builtin.file:
+    path: $HOME/.config/dunst
+    src: $HOME/dotfiles/roles/workstation/files/dunst
+    state: link
+    force: yes
