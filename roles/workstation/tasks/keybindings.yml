@@ -1,9 +1,10 @@
+---
 - name: Keybindings | Map Caps lock to Esc
-  shell: |
+  ansible.builtin.shell: |
     setxkbmap -option caps:escape
   changed_when: false
 
 - name: Keybindings | Map Caps lock to Esc
-  shell: |
+  ansible.builtin.shell: |
     xmodmap -e 'keysym Print = Super_L'
   changed_when: false

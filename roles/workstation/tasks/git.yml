@@ -1,11 +1,13 @@
+---
 - name: Git | Install
-  package:
+  ansible.builtin.package:
     name:
       - git
 
 - name: Git | Symlink .gitconfig
-  file: path=/home/thony/.gitconfig
-        src=/home/thony/dotfiles/roles/workstation/files/git/.gitconfig
-        state=link
-        force=yes
+  absible.builtin.file:
+    path: /home/thony/.gitconfig
+    src: /home/thony/dotfiles/roles/workstation/files/git/.gitconfig
+    state: link
+    force: yes
   become: false
