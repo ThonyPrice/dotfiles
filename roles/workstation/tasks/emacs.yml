@@ -1,6 +1,6 @@
 - name: Emacs | Present
   ansible.builtin.package:
-    name: 
+    name:
       - emacs
       - ripgrep
       - fd
@@ -29,7 +29,7 @@
   register: emacs_dir
 
 - name: Emacs | Clone Doom (if not present)
-  git:
+  ansible.builtin.git:
     repo: 'https://github.com/doomemacs/doomemacs'
     dest: ~/.emacs.d
     depth: 1
