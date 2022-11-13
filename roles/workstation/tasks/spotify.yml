@@ -47,7 +47,7 @@
     recurse: yes
   when: not spicetify_exist.stat.exists and ansible_distribution == "Archlinux"
 
-- name: Spotify | Spicetify Marketplace | Fetch installation script (if not present)
+- name: Spotify | Spicetify Marketplace | Fetch install script (if not present)
   ansible.builtin.get_url:
     url: "https://raw.githubusercontent.com/spicetify/\
           spicetify-marketplace/main/resources/install.sh"
@@ -57,7 +57,6 @@
 
 - name: Spotify | Spicetify Marketplace | Install (if not present)
   ansible.builtin.shell: |
-  ansible.buildin.shell: |
     spicetify
     # Install marketplace to configure themes inside the Spotify client
     /tmp/spicetify_marketplace_setup
