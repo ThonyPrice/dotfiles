@@ -34,6 +34,7 @@
     repo: 'https://github.com/doomemacs/doomemacs'
     dest: ~/.emacs.d
     depth: 1
+    version: 2.0.9
     update: no
   when: not emacs_dir.stat.exists
 

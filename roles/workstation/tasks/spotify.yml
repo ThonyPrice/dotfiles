@@ -17,18 +17,33 @@
   register: spicetify_exist
 
 - name: Spotify | Spicetify | Install (if not present)
-  ansible.builtin.shell: |
-    set -o pipefail
-    curl -fsSL \
-    https://raw.githubusercontent.com/spicetify/spicetify-cli/master/install.sh \
-    | sh
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/spicetify/spicetify-cli/master/install.sh
+    dest: /tmp/spicetify_setup
+    mode: 0755
   when: not spicetify_exist.stat.exists
-  become: false
 
-- name: Spotify | Spicetify | Setup chmod (Arch)
-  ansible.builtin.shell: |
-    chmod a+wr /opt/spotify
-    chmod a+wr /opt/spotify/Apps -R
+- name: Execute setup NodeJs script
+  ansible.buildin.shell: /tmp/spicetify_setup
+  when: not spicetify_exist.stat.exists
+
+- name: Spotify | Spicetify | Configure chmod on /opt/spotify (Arch)
+  ansible.buildin.file:
+    path: /opt/spotify
+    state: touch
+    mode: a+wr
+    modification_time: preserve
+    access_time: preserve
+  when: not spicetify_exist.stat.exists and ansible_distribution == "Archlinux"
+
+- name: Spotify | Spicetify | Configure chmod on /opt/spotify/Apps (Arch)
+  ansible.buildin.file:
+    path: /opt/spotify/Apps
+    state: touch
+    mode: a+wr
+    modification_time: preserve
+    access_time: preserve
+    recurse: yes
   when: not spicetify_exist.stat.exists and ansible_distribution == "Archlinux"
 
 - name: Spotify | Spicetify | Configure marketplace
@@ -43,3 +58,5 @@
     spicetify update
   when: not spicetify_exist.stat.exists
   become: false
+  args:
+    warn: no

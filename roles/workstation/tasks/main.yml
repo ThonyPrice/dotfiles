@@ -1,9 +1,9 @@
 # ---
-# Tasks to be migrated for "Base" role
 - name: Git
   tags: git
   ansible.builtin.import_tasks: git.yml
 
+# Tasks to be migrated for "Base" role
 - name: Keybindings
   tags: keybindings
   ansible.builtin.import_tasks: keybindings.yml
