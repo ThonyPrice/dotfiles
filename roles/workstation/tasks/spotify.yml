@@ -16,14 +16,14 @@
     path: /home/thony/.spicetify
   register: spicetify_exist
 
-- name: Spotify | Spicetify | Install (if not present)
+- name: Spotify | Spicetify | Fetch installation script (if not present)
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/spicetify/spicetify-cli/master/install.sh
     dest: /tmp/spicetify_setup
     mode: 0755
   when: not spicetify_exist.stat.exists
 
-- name: Execute setup NodeJs script
+- name: Spotify | Spicetify | Install (if not present)
   ansible.buildin.shell: /tmp/spicetify_setup
   when: not spicetify_exist.stat.exists
 
@@ -46,17 +46,21 @@
     recurse: yes
   when: not spicetify_exist.stat.exists and ansible_distribution == "Archlinux"
 
-- name: Spotify | Spicetify | Configure marketplace
+- name: Spotify | Spicetify Marketplace | Fetch installation script (if not present)
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/spicetify/spicetify-marketplace/main/resources/install.sh
+    dest: /tmp/spicetify_marketplace_setup
+    mode: 0755
+  when: not spicetify_exist.stat.exists
+
+- name: Spotify | Spicetify Marketplace | Install (if not present)
   ansible.builtin.shell: |
+  ansible.buildin.shell: |
     spicetify
     # Install marketplace to configure themes inside the Spotify client
-    set -o pipefail
-    curl -fsSL \
-    https://raw.githubusercontent.com/spicetify/spicetify-marketplace/main/resources/install.sh \
-    | sh
+    /tmp/spicetify_marketplace_setup
     spicetify backup apply enable-devtools
     spicetify update
-  when: not spicetify_exist.stat.exists
   become: false
   args:
     warn: no
