@@ -25,7 +25,7 @@
   when: not spicetify_exist.stat.exists
 
 - name: Spotify | Spicetify | Install (if not present)
-  ansible.builtin.shell: /tmp/spicetify_setup
+  ansible.builtin.command: /tmp/spicetify_setup
   when: not spicetify_exist.stat.exists
 
 - name: Spotify | Spicetify | Configure chmod on /opt/spotify (Arch)
@@ -62,6 +62,4 @@
     /tmp/spicetify_marketplace_setup
     spicetify backup apply enable-devtools
     spicetify update
-  become: false
-  args:
-    warn: no
+  when: not spicetify_exist.stat.exists
