@@ -1,76 +1,59 @@
 # --- Tasks to be migrated for "Base" role ---
-- name: git
+- name: Git
   tags: git
-  import_tasks: git.yml
+  ansible.builtin.import_tasks: git.yml
 
 - name: Keybindings
   tags: keybindings
-  import_tasks: keybindings.yml
+  ansible.builtin.import_tasks: keybindings.yml
   when: ansible_distribution == "Archlinux"
 
 - name: Periphials
   tags: periphials
-  import_tasks: periphials.yml
+  ansible.builtin.import_tasks: periphials.yml
   when: ansible_distribution == "Archlinux"
   become: true
 
 - name: Terminal
   tags: terminal,kitty
-  import_tasks: kitty.yml
+  ansible.builtin.import_tasks: kitty.yml
 
-- name: install nvim
+- name: Nvim
   tags: nvim,vim
-  import_tasks: nvim.yml
+  ansible.builtin.import_tasks: nvim.yml
 
-- name: install fish
+- name: Fish
   tags: shell,fish
-  import_tasks: fish.yml
+  ansible.builtin.import_tasks: fish.yml
 
 # --- Tasks in Workstation role ---
-- name: emacs
+- name: Emacs
   tags: emacs
-  import_tasks: emacs.yml
+  ansible.builtin.import_tasks: emacs.yml
 
-- name: firefox
+- name: Firefox
   tags: firefox
-  import_tasks: firefox.yml
+  ansible.builtin.import_tasks: firefox.yml
 
-- name: software
+- name: Software
   tags: software
-  import_tasks: software.yml
+  ansible.builtin.import_tasks: software.yml
 
-- name: spotify
+- name: Spotify
   tags: spotify
-  import_tasks: spotify.yml
+  ansible.builtin.import_tasks: spotify.yml
 
 
-- name: setup wm
+- name: Setup wm
   tags: wm,bspwm,sxhkd,polybar
-  import_tasks: arch-wm.yml
+  ansible.builtin.import_tasks: arch-wm.yml
   when: ansible_distribution == "Archlinux"
 
-- name: notifications
+- name: Notifications
   tags: notifications,duinst
-  import_tasks: dunst.yml
+  ansible.builtin.import_tasks: dunst.yml
   when: ansible_distribution == "Archlinux"
 
-- name: sync wallpapers
+- name: Wallpapers
   tags: wallpapers
-  import_tasks: wallpaper.yml
-
-# - name: install pkgs
-  # ansible.builtin.package:
-    # name:
-      # - acpilight 
-      # - gtop
-      # - fish
-      # - kitty  
-      # - neovim
-      # - npm
-      # - python-pip
-      # - ranger
-      # - rofi
-      # - slack-desktop
-      # - spotify
-      # - stow
-      # - ttf-jetbrains-mono
+  ansible.builtin.import_tasks: wallpaper.yml

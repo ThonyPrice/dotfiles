@@ -23,13 +23,14 @@
     force: yes
 
 - name: Shell | Stat present login shell
-  shell: |
+  ansible.builtin.shell: |
+    set -o pipefail
     getent passwd $LOGNAME | cut -d: -f7
   register: shell
   changed_when: false
 
 - name: Shell | Set fish as default shell (if not configured)
-  shell: |
+  ansible.builtin.shell: |
     chsh -s $(which fish)
   when: not shell.stdout is search('fish')
   become: true

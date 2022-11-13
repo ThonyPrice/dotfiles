@@ -37,7 +37,7 @@
     update: no
   when: not emacs_dir.stat.exists
 
-# - name: Emacs | Run Doom Install
+  # - name: Emacs | Run Doom Install
   # TODO: Only run installer if not yet installed
   # EDIT: The installer awaits input, run manually for now
   # command: ~/.emacs.d/bin/doom install
