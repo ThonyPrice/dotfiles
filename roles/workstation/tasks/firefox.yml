@@ -1,5 +1,6 @@
+---
 - name: Browser | Firefox installed
-  package:
+  ansible.builtin.package:
     name:
       - firefox
 
@@ -12,12 +13,12 @@
   register: betterfox_profile
 
 - name: Browser | Firefox profile | Betterfox create profile (if not present)
-  shell: |
+  ansible.builtin.shell: |
     firefox --createprofile betterfox
   when: betterfox_profile.matched == 0
 
 - name: Browser | Firefox profile | Betterfox get profile path
-  find:
+  ansible.builtin.find:
     paths: ~/.mozilla/firefox
     patterns: '.*betterfox'
     use_regex: true
@@ -25,10 +26,11 @@
   register: betterfox_profile_dir
 
 - name: Browser | Firefox profile | Betterfox symlink profile configs
-  file: path="{{ betterfox_profile.files.0.path }}/{{ item }}"
-        src="~/dotfiles/roles/workstation/files/firefox/{{ item }}"
-        state=link
-        force=yes
+  absible.builtin.file:
+    path: "{{ betterfox_profile.files.0.path }}/{{ item }}"
+    src: "~/dotfiles/roles/workstation/files/firefox/{{ item }}"
+    state: link
+    force: yes
   loop:
     - user.js
     - chrome
