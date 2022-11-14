@@ -92,3 +92,8 @@ These tools are currently in a testing phase and might be included in the future
   #+BEGIN_SRC shell
   $ sudo echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
   #+END_SRC
+- Direnv (required for this one client, consider branching on clients?)
+  #+BEGIN_SRC shell
+  $ sudo pacman -S direnv
+  #+END_SRC
+- Docker desktop, see https://docs.docker.com/desktop/install/archlinux/
