@@ -97,3 +97,8 @@ These tools are currently in a testing phase and might be included in the future
   $ sudo pacman -S direnv
   #+END_SRC
 - Docker desktop, see https://docs.docker.com/desktop/install/archlinux/
+- gtop
+  #+BEGIN_SRC shell
+  $ sudo pacman -S gtop
+  #+END_SRC
+

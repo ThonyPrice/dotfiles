@@ -35,12 +35,16 @@
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-one)
 
-;; If you use `org' and don't want your org files in the default location below,
+;; If you use `org' and don'trwant your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/git/Org/")
-
+(setq org-directory "~/git/roam/")
+(after! org
+  (setq org-agenda-files '("~/git/roam/*"
+                           "~/git/roam/todo.org"
+                           "~/git/roam/daily/*")))
+;;
 ;; Set projectile discover directory
-(setq projectile-project-search-path '("~/git/"))
+(setq projectile-project-search-path '(("~/git" . 1)))
 
 ;; Set up code review tooling
 (setq code-review-fill-column 80)
@@ -151,6 +155,9 @@
   (org-roam-directory (file-truename "~/git/roam"))
   (org-id-locations-file (file-truename "~/git/roam/.orgids"))
   (org-roam-completion-everywhere t)
+  (org-roam-dailies-capture-templates
+    '(("d" "default" entry "* %<%I:%M %p>: %?"
+       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n i" . org-roam-node-insert)
@@ -174,6 +181,27 @@
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
+
+;; Org Capture
+(defun my/delete-capture-frame (&rest _)
+  "Delete frame with its name frame-parameter set to \"capture\"."
+  (if (equal "capture" (frame-parameter nil 'name))
+      (delete-frame)))
+(advice-add 'org-capture-finalize :after #'my/delete-capture-frame)
+
+(defun my/org-capture-frame ()
+  "Run org-capture in its own frame."
+  (interactive)
+  (require 'cl-lib)
+  (select-frame-by-name "capture")
+  (delete-other-windows)
+  (cl-letf (((symbol-function 'switch-to-buffer-other-window) #'switch-to-buffer))
+    (condition-case err
+        (org-roam-dailies-capture-today)
+      ;; "q" signals (error "Abort") in `org-capture'
+      ;; delete the newly created frame in this scenario.
+      (user-error (when (string= (cadr err) "Abort")
+                    (delete-frame))))))
 
 ;; Org Presentations
 (defun presentation-setup ()

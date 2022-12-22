@@ -73,6 +73,10 @@ super + ctrl + {Left,Down,Up,Right}
 super + ctrl + {h,j,k,l}
 	bspc node {@east -r -10,@north -r +10,@south -r -10,@west -r +10}
 
+# Expand tiled space
+super + alt + {h,j,k,l}
+	bspc node {@west -r -10,@south -r +10,@north -r -10,@east -r +10}
+
 # Focus parent/brother/first/second for preselection
 super + ctrl + {e,r,t,y}
 	bspc node --focus @{parent,brother,first,second}
@@ -89,9 +93,6 @@ alt + r
 # ALT + SHIFT KEYS
 #################################################################
 
-# Expand tiled space
-alt + shift + {h,j,k,l}
-	bspc node {@west -r -10,@south -r +10,@north -r -10,@east -r +10}
 
 # Focused desktop window gap
 super + button{4,5}
@@ -111,19 +112,28 @@ super + shift + Return
 
 # Power-menu 
 super + shift + e
-     ~/.config/rofi/powermenu.sh
+  rofi -modi emoji -show emoji
+  # ~/.config/rofi/powermenu.sh
 
 #reload sxhkd:
 super + shift + s
 	pkill -USR1 -x sxhkd
 
+#Emacs client
+super + shift + o
+	emacsclient -nc
+
+#Emacs client - Capture in daily
+super + shift + d
+	emacsclient -nc --eval "(org-roam-dailies-capture-today)"
+
 #i3 Lock
 ctrl + alt + k
     /home/thony/.config/bspwm/scripts/i3lock-fancy/i3lock-fancy.sh
 
-#Scrot
-#Print
-    #scrot 'Screenshot-%Y-%m-%d-%s_$wx$h.jpg' -e 'mv $f $$(xdg-user-dir PICTURES)'
+#Screen shot
+super + ctrl + 3
+    scrot 'Screenshot-%Y-%m-%d-%s_$wx$h.jpg' -e 'mv $f $$(xdg-user-dir PICTURES)'
 
 #################################################################
 #     MULTIMEDIA KEYS

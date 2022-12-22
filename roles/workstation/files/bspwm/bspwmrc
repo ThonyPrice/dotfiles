@@ -2,6 +2,8 @@
 
 # Autostart
 pgrep -x sxhkd > /dev/null || sxhkd &
+# Protect from OOM
+sh earlyoom &
 # Set display from arandr saved script
 sh ~/.screenlayout/monitor.sh &
 # Bar
@@ -24,8 +26,11 @@ xsetroot -cursor_name left_ptr &
 # Keyboard
 setxkbmap -option caps:escape
 xmodmap -e 'keysym Print = Super_L'
+# Enable Logitech mouse options
+sh logiops &
 # Low battery notifier
 ~/.config/bspwm/scripts/low_bat_notifier.sh
+
 
 # BSPWM config
 bspc config border_width         1
