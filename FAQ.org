@@ -2,7 +2,7 @@
 
 Perhaps not frequent questions but here is a collection of questions, answers, notes, issues, resolutions, etc. which I have enountered during system configuration.
 
-** 2025-11 - Screen recording issues - missing intel drivers
+** 2025-11 | Screen recording issues / missing intel drivers
 
 | gsr error: your gpu does not support 'h264' video codec. If you are sure that your gpu does support 'h264' video encoding and you are using an AMD/Intel GPU, then make sure you have installed the GPU specific vaapi packages (intel-media-driver, libva-intel-driver, libva-mesa-driver and linux-firmware). 
 
