@@ -43,4 +43,3 @@ This repository contains:
 ** Usage
 
 Run =dotfiles --help= to see all available commands.
-
