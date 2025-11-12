@@ -8,4 +8,4 @@ nix-channel --add https://nixos.org/channels/nixpkgs-unstable
 nix-channel --update
 
 echo "Starting nix daemon service..."
-systemctl start nix-daemon.service
+# systemctl start nix-daemon.service
