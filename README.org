@@ -14,31 +14,31 @@ This repository contains:
 ** Getting Started
 
 1. Clone this repository to =~/git/dotfiles=:
-   #+begin_src bash
-   mkdir -p ~/git
-   git clone https://github.com/ThonyPrice/dotfiles.git ~/
-   #+end_src
+#+begin_src bash
+mkdir -p ~/git
+git clone https://github.com/ThonyPrice/dotfiles.git ~/
+#+end_src
 
 2. Install GNU Stow (required for symlinking configs):
-   #+begin_src bash
-   sudo pacman -S stow
-   #+end_src
+#+begin_src bash
+sudo pacman -S stow
+#+end_src
 
 3. Stow the bin scripts to make the =dotfiles= command available:
-   #+begin_src bash
-   cd ~/git/dotfiles
-   ./bin/stow-bin
-   #+end_src
+#+begin_src bash
+cd ~/git/dotfiles
+./bin/stow-bin
+#+end_src
 
 4. Install packages:
-   #+begin_src bash
-   dotfiles packages install
-   #+end_src
+#+begin_src bash
+dotfiles packages install
+#+end_src
 
 5. Sync your configurations:
-   #+begin_src bash
-   dotfiles config sync
-   #+end_src
+#+begin_src bash
+dotfiles config sync
+#+end_src
 
 ** Usage
 
