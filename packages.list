@@ -2,6 +2,7 @@
 # One package name per line (corresponds to install-{name}.sh in omarchy-packages/)
 # Lines starting with # are ignored
 
+blesh
 claude-code
 datagrip
 emacs
