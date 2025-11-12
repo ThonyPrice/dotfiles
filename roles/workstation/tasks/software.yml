@@ -1,7 +1,0 @@
----
-- name: Software | Install packages
-  kewlfft.aur.aur:
-    use: yay
-    name:
-      - slack-desktop
-  become: false

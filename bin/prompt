@@ -1,3 +1,0 @@
-if [ "$(printf "No\nYes" | rofi -dmenu -i -p "$1")" = "Yes" ]; then
-   $2
-fi

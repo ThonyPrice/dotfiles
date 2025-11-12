@@ -1,104 +1,46 @@
 #+TITLE: Dotfiles
 
-Ansible playbook to configure and customize systems. 💻
-The purpose is a single command to configure systems in an repeatable way.
+These dotfiles are tailored for my preferences running Omarchy.
+Multiple aspects of these configs build on top on the omarchy defaults, hence these will not work well on any other distro without major changes.
 
-The playbook is compatible with:
+** Contents
 
-- Arch systems
-- MacOS /(work in progress)/
+This repository contains:
+- Package installation scripts, managed through =omarchy-packages/=
+- Configuration files for =nix=, =hypr=, and other applications
+- Personal shell scripts in =bin/=
+- A unified =dotfiles= management script for syncing configs and installing packages
 
-* Description
+** Getting Started
 
-The meat of this repository is a giant Ansible playbook.
-It defines /my personal/ system configuration including roles, programs, config, etc.
+1. Clone this repository to =~/git/dotfiles=:
+   #+begin_src bash
+   mkdir -p ~/git
+   git clone https://github.com/ThonyPrice/dotfiles.git ~/
+   #+end_src
 
-The playbook is bootstrapped by one command in ~/bin/dotfiles.sh~.
-It achieves three things:
+2. Install GNU Stow (required for symlinking configs):
+   #+begin_src bash
+   sudo pacman -S stow
+   #+end_src
 
-1. Install Ansible (if not present).
-2. Create `.ssh` directory and keys (if not present).
-3. Run the Ansible playbook...
+3. Stow the bin scripts to make the =dotfiles= command available:
+   #+begin_src bash
+   cd ~/git/dotfiles
+   ./bin/stow-bin
+   #+end_src
 
-** The Playbook
+4. Install packages:
+   #+begin_src bash
+   dotfiles packages install
+   #+end_src
 
-Depending on the host, the playbook run any of the roles:
+5. Sync your configurations:
+   #+begin_src bash
+   dotfiles config sync
+   #+end_src
 
-- base :: Configuration suitable for all systems.
-- workstation :: This configuration is applied on top of =base= for non-server systems.
+** Usage
 
-Both roles include tasks that:
-- Configure the system (e.g. keybindings, themes, package manager)
-- Install all defined programs and software (e.g. editors, development tooling)
-- Symlink defined configurations (i.e. dotfiles)
-- Configures all users
-
-** Prerequisites
-
-*Future work:* Automate these tasks within the Ansible play.
-
-Pull Ansible packages used in the play:
-
-#+BEGIN_SRC shell
-``` shell
-$ ansible-galaxy install -r requirements
-```
-#+END_SRC shell
-
-** Post Playbook
-
-These tasks are required after the playbook to finalize some installation/configuration.
-
-*Future work:* Similar to the prerequisites, these should be automated within the playbook.
-
-Finalize the Doom Emacs installation:
-
-#+BEGIN_SRC shell
-``` shell
-$ ~/.emacs.d/bin/doom install
-```
-#+END_SRC shell
-
-* What's Included?
-
-This segment provide a brief description of setup and configs.
-
-** Spicetify
-
-Theming utility for spotify client.
-
-* Tooling To be Included
-
-These tools are currently in a testing phase and might be included in the future.
-
-- Blutooth manager:
-  - Backend - Install =bluez= and =bluez-utils=. Enable systemctl startup
-  - Frontend - Bluberry
-- fwupd - Firmware upgrade manager ([[https://bbs.archlinux.org/viewtopic.php?pid=2062449#p2062449][reference]])
-- Development
-  - VS Code
-    #+BEGIN_SRC shell
-    $ yay -S code
-    #+END_SRC
-  - Node version manager
-    #+BEGIN_SRC shell
-    $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
-    #+END_SRC
-  - Fisher
-    #+BEGIN_SRC shell
-    $ curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
-    #+END_SRC
-- Remove horrible system "beep" (only required on Arch and Lenovo?)
-  #+BEGIN_SRC shell
-  $ sudo echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
-  #+END_SRC
-- Direnv (required for this one client, consider branching on clients?)
-  #+BEGIN_SRC shell
-  $ sudo pacman -S direnv
-  #+END_SRC
-- Docker desktop, see https://docs.docker.com/desktop/install/archlinux/
-- gtop
-  #+BEGIN_SRC shell
-  $ sudo pacman -S gtop
-  #+END_SRC
+Run =dotfiles --help= to see all available commands.
 
