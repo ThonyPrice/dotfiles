@@ -1,0 +1,7 @@
+# Dotfiles configurations to be stowed
+# One config directory name per line
+# Lines starting with # are ignored
+
+bash
+hypr
+nix

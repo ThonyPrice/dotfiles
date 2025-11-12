@@ -1,0 +1,11 @@
+# Packages to be installed
+# One package name per line (corresponds to install-{name}.sh in omarchy-packages/)
+# Lines starting with # are ignored
+
+claude-code
+datagrip
+emacs
+nix
+slack
+stow
+zen-browser

@@ -1,0 +1,342 @@
+#!/bin/bash
+
+# ==============================================================================
+# Dotfiles Management Script
+# ==============================================================================
+# A unified script for managing dotfiles configurations and packages
+# Usage: dotfiles <command> <subcommand> [args]
+
+set -e  # Exit on error
+
+# ------------------------------------------------------------------------------
+# Constants and Configuration
+# ------------------------------------------------------------------------------
+
+# Resolve the real path of the script (follow symlinks)
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
+REPO_PATH="$(cd "${SCRIPT_DIR}/.." && pwd)"
+CONFIGS_LIST="${REPO_PATH}/configs.list"
+PACKAGES_LIST="${REPO_PATH}/packages.list"
+PACKAGES_DIR="${REPO_PATH}/omarchy-packages"
+
+# ------------------------------------------------------------------------------
+# Helper Functions
+# ------------------------------------------------------------------------------
+
+# Print error message and exit
+error() {
+    echo "Error: $1" >&2
+    exit 1
+}
+
+# Print info message
+info() {
+    echo "→ $1"
+}
+
+# Print success message
+success() {
+    echo "✓ $1"
+}
+
+# Check if a command exists
+command_exists() {
+    command -v "$1" &> /dev/null
+}
+
+# Read manifest file (ignoring comments and empty lines)
+read_manifest() {
+    local manifest_file="$1"
+
+    if [[ ! -f "$manifest_file" ]]; then
+        error "Manifest file not found: $manifest_file"
+    fi
+
+    grep -v '^#' "$manifest_file" | grep -v '^[[:space:]]*$' || true
+}
+
+# Check if value exists in manifest
+exists_in_manifest() {
+    local manifest_file="$1"
+    local value="$2"
+
+    read_manifest "$manifest_file" | grep -Fxq "$value"
+}
+
+# Add value to manifest if not already present
+add_to_manifest() {
+    local manifest_file="$1"
+    local value="$2"
+
+    if exists_in_manifest "$manifest_file" "$value"; then
+        info "$value already exists in $(basename "$manifest_file")"
+        return 0
+    fi
+
+    echo "$value" >> "$manifest_file"
+    success "Added $value to $(basename "$manifest_file")"
+}
+
+# Validate repository path
+validate_repo() {
+    if [[ ! -d "$REPO_PATH" ]]; then
+        error "Repository not found at: $REPO_PATH"
+    fi
+}
+
+# ------------------------------------------------------------------------------
+# Config Management Functions
+# ------------------------------------------------------------------------------
+
+# Sync all configurations using GNU Stow
+config_sync() {
+    info "Syncing configurations..."
+
+    # Check if stow is installed
+    if ! command_exists stow; then
+        error "GNU Stow is not installed. Install it first with: yay -S stow"
+    fi
+
+    validate_repo
+
+    # Read configs from manifest
+    local configs
+    configs=$(read_manifest "$CONFIGS_LIST")
+
+    if [[ -z "$configs" ]]; then
+        info "No configurations to sync"
+        return 0
+    fi
+
+    # Change to repository directory
+    cd "$REPO_PATH"
+
+    # Stow each config
+    while IFS= read -r config; do
+        if [[ -d "$config" ]]; then
+            info "Stowing $config..."
+            stow "$config" --target="${HOME}"
+            success "$config stowed"
+        else
+            echo "Warning: Config directory '$config' not found, skipping..." >&2
+        fi
+    done <<< "$configs"
+
+    success "All configurations synced"
+}
+
+# Add a new configuration
+config_add() {
+    local config_name="$1"
+
+    if [[ -z "$config_name" ]]; then
+        error "Usage: dotfiles config add <name>"
+    fi
+
+    validate_repo
+
+    # Create directory structure: {CONFIG_NAME}/.config/{CONFIG_NAME}
+    local config_dir="${REPO_PATH}/${config_name}/.config/${config_name}"
+
+    if [[ -d "${REPO_PATH}/${config_name}" ]]; then
+        error "Config directory already exists: ${config_name}"
+    fi
+
+    info "Creating config structure for $config_name..."
+    mkdir -p "$config_dir"
+
+    # Create placeholder file
+    cat > "${config_dir}/config-placeholder" << 'EOF'
+# This is a placeholder file to ensure the directory is tracked by git
+# Replace this file with actual configuration files
+EOF
+
+    success "Created directory structure: ${config_name}/.config/${config_name}"
+
+    # Add to manifest
+    add_to_manifest "$CONFIGS_LIST" "$config_name"
+
+    success "Configuration '$config_name' ready to use"
+    info "Add your config files to: ${config_dir}"
+}
+
+# ------------------------------------------------------------------------------
+# Package Management Functions
+# ------------------------------------------------------------------------------
+
+# Install all packages
+packages_install() {
+    info "Installing packages..."
+
+    validate_repo
+
+    # Read packages from manifest
+    local packages
+    packages=$(read_manifest "$PACKAGES_LIST")
+
+    if [[ -z "$packages" ]]; then
+        info "No packages to install"
+        return 0
+    fi
+
+    # Install each package
+    local failed_packages=()
+    while IFS= read -r package; do
+        local install_script="${PACKAGES_DIR}/install-${package}.sh"
+
+        if [[ -f "$install_script" ]]; then
+            info "Installing $package..."
+            # Run install script and capture exit code (don't let it stop execution)
+            set +e
+            bash "$install_script"
+            local exit_code=$?
+            set -e
+
+            if [[ $exit_code -eq 0 ]]; then
+                success "$package installed"
+            else
+                echo "Warning: Failed to install $package (exit code: $exit_code)" >&2
+                failed_packages+=("$package")
+            fi
+        else
+            echo "Warning: Install script not found for $package: $install_script" >&2
+            failed_packages+=("$package")
+        fi
+    done <<< "$packages"
+
+    if [[ ${#failed_packages[@]} -gt 0 ]]; then
+        echo ""
+        echo "Failed packages: ${failed_packages[*]}" >&2
+        return 1
+    fi
+
+    success "All packages installed"
+}
+
+# Add a new package
+packages_add() {
+    local package_name="$1"
+
+    if [[ -z "$package_name" ]]; then
+        error "Usage: dotfiles packages add <name>"
+    fi
+
+    validate_repo
+
+    local install_script="${PACKAGES_DIR}/install-${package_name}.sh"
+
+    # Check if install script already exists
+    if [[ -f "$install_script" ]]; then
+        error "Install script already exists: $install_script"
+    fi
+
+    # Create install script
+    info "Creating install script for $package_name..."
+    cat > "$install_script" << EOF
+#!/bin/bash
+
+echo "Installing ${package_name}..."
+yay -S --noconfirm --needed ${package_name}
+EOF
+
+    chmod +x "$install_script"
+    success "Created install script: $install_script"
+
+    # Add to manifest
+    add_to_manifest "$PACKAGES_LIST" "$package_name"
+
+    success "Package '$package_name' added"
+    info "Edit the install script if needed: $install_script"
+}
+
+# ------------------------------------------------------------------------------
+# Command Parsing and Help
+# ------------------------------------------------------------------------------
+
+# Show usage information
+show_help() {
+    cat << EOF
+Dotfiles Management Script
+
+Usage:
+  dotfiles <command> <subcommand> [args]
+
+Commands:
+  config sync              Sync all configurations using GNU Stow
+  config add <name>        Add a new configuration to the repository
+
+  packages install         Install all packages from the manifest
+  packages add <name>      Add a new package to the repository
+
+Options:
+  -h, --help              Show this help message
+
+Examples:
+  dotfiles config sync            # Sync all configs (nix, hypr, etc.)
+  dotfiles config add kitty       # Add kitty config
+  dotfiles packages install       # Install all packages
+  dotfiles packages add firefox   # Add firefox package
+
+EOF
+}
+
+# Parse commands
+parse_command() {
+    local command="$1"
+    local subcommand="$2"
+    shift 2 || true
+
+    case "$command" in
+        config)
+            case "$subcommand" in
+                sync)
+                    config_sync
+                    ;;
+                add)
+                    config_add "$@"
+                    ;;
+                *)
+                    error "Unknown config subcommand: $subcommand\nUse 'dotfiles --help' for usage"
+                    ;;
+            esac
+            ;;
+        packages)
+            case "$subcommand" in
+                install)
+                    packages_install
+                    ;;
+                add)
+                    packages_add "$@"
+                    ;;
+                *)
+                    error "Unknown packages subcommand: $subcommand\nUse 'dotfiles --help' for usage"
+                    ;;
+            esac
+            ;;
+        -h|--help|help)
+            show_help
+            exit 0
+            ;;
+        *)
+            error "Unknown command: $command\nUse 'dotfiles --help' for usage"
+            ;;
+    esac
+}
+
+# ------------------------------------------------------------------------------
+# Main Entry Point
+# ------------------------------------------------------------------------------
+
+main() {
+    # Check for at least one argument
+    if [[ $# -eq 0 ]]; then
+        show_help
+        exit 1
+    fi
+
+    parse_command "$@"
+}
+
+# Run main function
+main "$@"

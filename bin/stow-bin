@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Stow personal scripts from dotfiles/bin to ~/.local/bin
+
+# Resolve the real path of the script (follow symlinks)
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
+REPO_PATH="$(cd "${SCRIPT_DIR}/.." && pwd)"
+TARGET_DIR="${HOME}/.local/bin"
+
+# Check if stow is installed
+if ! command -v stow &> /dev/null; then
+    echo "Error: GNU Stow is not installed. Install it first with: yay -S stow" >&2
+    exit 1
+fi
+
+# Ensure target directory exists
+mkdir -p "$TARGET_DIR"
+
+# Change to repo directory
+cd "$REPO_PATH"
+
+# Stow bin directory
+echo "→ Stowing bin scripts to ~/.local/bin..."
+stow bin --target="$TARGET_DIR"
+echo "✓ Bin scripts stowed successfully"
+
+# Provide validation
+echo "$ ls -la $TARGET_DIR..."
+ls -la "$TARGET_DIR"
