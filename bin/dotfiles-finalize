@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# ==============================================================================
+# Dotfiles Finalization Script
+# ==============================================================================
+# This should only need to run ONCE post install
+# It runs installation that are left of our the other scripts.
+
+echo "Adding dotfile scripts to PATH..."
+~/git/dotfiles/bin/stow-bin
+
+echo "Installing doom emacs..."
+~/.emacs.d/bin/doom install
+~/.emacs.d/bin/doom sync
+

@@ -15,31 +15,27 @@ This repository contains:
 
 1. Clone this repository to =~/git/dotfiles=:
   #+begin_src bash
-  mkdir -p ~/git
-  git clone https://github.com/ThonyPrice/dotfiles.git ~/
+  git clone https://github.com/ThonyPrice/dotfiles.git ~/git/dotfiles
   #+end_src
 
-2. Install GNU Stow (required for symlinking configs):
-  #+begin_src bash
-  sudo pacman -S stow
-  #+end_src
-
-3. Stow the bin scripts to make the =dotfiles= command available:
+2. Install packages:
   #+begin_src bash
   cd ~/git/dotfiles
-  ./bin/stow-bin
+  ./bin/dotfiles packages install
   #+end_src
 
-4. Install packages:
+3. Sync your configurations:
   #+begin_src bash
-  dotfiles packages install
-  #+end_src
-
-5. Sync your configurations:
-  #+begin_src bash
-  dotfiles config sync
+  ./bin/dotfiles config sync
   #+end_src
 
 ** Usage
+
+Add dotfiles script to bin:
+#+begin_src bash
+./bin/stow-bin
+#+end_src
+
+Now the =dotfiles= script is executable from anywhere, use it to add install packages to this repository or new configs. This purpose of the script is to make it *simple keeping dotfiles up to date with system configurations*.
 
 Run =dotfiles --help= to see all available commands.

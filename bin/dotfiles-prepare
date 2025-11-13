@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# ==============================================================================
+# Dotfiles Preparation Script
+# ==============================================================================
+# This should be run only ONCE
+# It removes system defaults that are replaced our own configs.
+# We can not symlink our configs (conveniently) without removing first.
+
+rm -f ~/.config/starship.toml
+rm -f ~/.bashrc ~/.bash_profile
+rm -f ~/.zshrc
+
+rm -frd ~/.config/hypr
+
