@@ -16,3 +16,13 @@ if [[ -d /usr/share/omarchy-zsh/functions ]]; then
 fi
 
 # --- Personal config ---
+
+# zsh plugin manager configs
+source ~/.config/zinit/config
+
+# Aliases
+alias l='eza -lh --group-directories-first --icons=auto'
+alias k='kubectl'
+alias py='python'
+
+

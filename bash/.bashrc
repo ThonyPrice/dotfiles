@@ -14,7 +14,3 @@ fi
 # (don't mess with these directly, just overwrite them here!)
 source ~/.local/share/omarchy/default/bash/rc
 
-
-# --- Personal config ---
-alias k='kubectl'
-alias py='python'
