@@ -13,5 +13,4 @@ nix-channel --add https://nixos.org/channels/nixpkgs-unstable
 nix-channel --update
 
 echo "Starting nix daemon service..."
-sudo systemctl enable nix-daemon.service
-sudo systemctl start nix-daemon.service
+sudo systemctl enable --now nix-daemon.service
