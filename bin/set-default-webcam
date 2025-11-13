@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Detect external webcam automatically
+EXT_CAM=$(v4l2-ctl --list-devices | awk -v RS= -F'\n' '/External|Logitech|USB/{print $2; exit}' | awk '{print $1}')
+
+if [[ -n "$EXT_CAM" && "$EXT_CAM" != "/dev/video0" ]]; then
+  sudo rm -f /dev/video0
+  sudo ln -s "$EXT_CAM" /dev/video0
+  echo "Switched default webcam to $EXT_CAM"
+else
+  echo "No external webcam found or already default"
+fi
