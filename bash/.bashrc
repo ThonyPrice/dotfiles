@@ -7,8 +7,6 @@ source ~/.local/share/omarchy/default/bash/rc
 
 
 # --- Personal config ---
-# If not running interactively, source ble.sh for auto complete etc.
-[[ $- == *i* ]] && source -- /usr/share/blesh/ble.sh --attach=none
 
 # Add your own exports, aliases, and functions here.
 # ...
@@ -16,5 +14,3 @@ source ~/.local/share/omarchy/default/bash/rc
 # Make an alias for invoking commands you use constantly
 alias k='kubectl'
 alias py='python'
-
-[[ ! ${BLE_VERSION-} ]] || ble-attach
