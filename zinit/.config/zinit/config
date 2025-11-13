@@ -23,3 +23,14 @@ zinit light-mode for \
 
 zinit light zsh-users/zsh-autosuggestions
 zinit light zdharma-continuum/fast-syntax-highlighting
+
+zinit light https://github.com/chisui/zsh-nix-shell.git
+zinit light https://github.com/nix-community/nix-zsh-completions.git
+
+zinit snippet OMZP::sudo
+zinit snippet OMZP::archlinux
+zinit snippet OMZP::kubectl
+zinit snippet OMZP::kubectx
+zinit snippet OMZP::command-not-found
+
+
