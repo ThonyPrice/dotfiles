@@ -18,11 +18,11 @@ fi
 echo "Clone private doom config..."
 if [ ! -d "$DOOM_CONFIG" ]; then
   git clone https://github.com/ThonyPrice/doom-emacs-private.git ~/.doom.d
+  echo -e "\n----- Doom emacs ready to be installed -----"
+  echo "Run: ~/.emacs.d/bin/doom install"
+  echo -e "---------------------------------------\n"
 else
   echo "Private doom config already cloned!"
 fi
 
-echo -e "\n----- Ready to install doom emacs -----"
-echo "Run: ~/.emacs.d/bin/doom install"
-echo -e "---------------------------------------\n"
 
