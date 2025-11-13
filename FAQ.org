@@ -12,3 +12,15 @@ As the error suggest I'm missing drivers, these needs to be installed since the 
 #+BEGIN_SRC bash
 sudo pacman -S intel-media-driver libva-mesa-driver libva-utils
 #+END_SRC
+
+** 2025-11 | Bootable Omarchy ISO
+
+| I do this too infrequently to remember these commands...
+
+*Resolution*
+#+BEGIN_SRC bash
+# Identify the USB drive
+sudo fdisk -l
+lsblk # works too
+sudo dd bs=4M if=path/to/archcraft.iso of=/dev/sdX status=progress oflag=sync
+#+END_SRC
