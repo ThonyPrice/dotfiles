@@ -20,6 +20,8 @@ fi
 # zsh plugin manager configs
 source ~/.config/zinit/config
 
+eval "$(direnv hook zsh)"
+
 # Aliases
 alias l='eza -lh --group-directories-first --icons=auto'
 alias k='kubectl'
