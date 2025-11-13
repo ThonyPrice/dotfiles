@@ -7,3 +7,4 @@
 # --- Personal configs ---
 
 PATH=~/.local/bin:$PATH
+PATH=~/.emacs.d/bin:$PATH
