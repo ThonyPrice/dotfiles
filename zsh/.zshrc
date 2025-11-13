@@ -24,6 +24,6 @@ source ~/.config/zinit/config
 alias l='eza -lh --group-directories-first --icons=auto'
 alias k='kubectl'
 alias py='python'
-alias path='tr ":" "\n" <<< "$PATH"'
+alias path='echo $PATH | tr ":" "\n"'
 
 
