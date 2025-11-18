@@ -3,7 +3,7 @@
 # Lines starting with # are ignored
 
 claude-code
-datagrip
+dbeaver
 direnv
 emacs
 nix
