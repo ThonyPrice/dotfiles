@@ -28,9 +28,9 @@ alias k='kubectl'
 alias py='python'
 alias path='echo $PATH | tr ":" "\n"'
 
-alias ..='zx ..'
-alias ...='zx ../..'
-alias cd..='zx ..'
-alias cd ...='zx ../..'
+alias ..='zd ./..'
+alias ...='zd ./../..'
+alias "cd .."='zd ./..'
+alias "cd ..."='zd ./../..'
 
 
