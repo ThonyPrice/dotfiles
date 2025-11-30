@@ -1,0 +1,27 @@
+{
+  "alwaysThinkingEnabled": true,
+  "hooks": {
+      "Notification": [
+      {
+          "matcher": "",
+          "hooks": [
+          {
+              "type": "command",
+              "command": "notify-send \"🔔 Claude Code\" \"Claude needs your input\""
+          }
+          ]
+      }
+      ],
+      "Stop": [
+      {
+          "matcher": "",
+          "hooks": [
+          {
+              "type": "command",
+              "command": "notify-send \"✅ Claude Code\" \"The task has been completed\""
+          }
+          ]
+      }
+      ]
+  }
+}
