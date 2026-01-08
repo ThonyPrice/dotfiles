@@ -22,9 +22,9 @@ source ~/.config/zinit/config
 
 eval "$(direnv hook zsh)"
 
-# Case-insensitive tab completion
+# Case-insensitive completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 autoload -Uz compinit && compinit
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
 # Aliases
 alias l='eza -lh --group-directories-first --icons=auto'
