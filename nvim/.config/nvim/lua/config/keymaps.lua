@@ -29,6 +29,9 @@ require("which-key").add({
 -- Terminal toggle (Doom: SPC o t)
 map("n", "<leader>ot", function() Snacks.terminal() end, { desc = "Toggle terminal" })
 
+-- File explorer (Doom: SPC o - for dired)
+map("n", "<leader>o-", "<cmd>Neotree toggle<cr>", { desc = "File explorer" })
+
 -- ============================================================================
 -- COMMANDS
 -- ============================================================================
@@ -93,3 +96,64 @@ map("n", "<leader>ps", function() Snacks.picker.grep() end, { desc = "Search in 
 
 -- Save file (Doom: SPC f s)
 map("n", "<leader>fs", "<cmd>w<cr>", { desc = "Save file" })
+
+-- Yank file paths (Doom: SPC f y)
+require("which-key").add({
+  { "<leader>fy", group = "Yank path" },
+})
+
+-- Yank file name (Doom: SPC f y n)
+map("n", "<leader>fyn", function()
+  local name = vim.fn.expand("%:t")
+  vim.fn.setreg("+", name)
+  vim.notify("Yanked: " .. name)
+end, { desc = "File name" })
+
+-- Yank relative path from git root (Doom: SPC f y y)
+map("n", "<leader>fyy", function()
+  local abs_path = vim.fn.expand("%:p")
+  local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+  local path
+  if vim.v.shell_error == 0 and git_root then
+    path = abs_path:sub(#git_root + 2) -- +2 to skip the trailing slash
+  else
+    path = vim.fn.expand("%:.") -- fallback to cwd-relative
+  end
+  vim.fn.setreg("+", path)
+  vim.notify("Yanked: " .. path)
+end, { desc = "Relative path (git root)" })
+
+-- Yank absolute path (Doom: SPC f y Y)
+map("n", "<leader>fyY", function()
+  local path = vim.fn.expand("%:p")
+  vim.fn.setreg("+", path)
+  vim.notify("Yanked: " .. path)
+end, { desc = "Absolute path" })
+
+-- ============================================================================
+-- MARKDOWN
+-- ============================================================================
+
+-- New checkbox on Ctrl+Enter (org-mode style)
+local function new_checkbox()
+  local line = vim.api.nvim_get_current_line()
+  if line:match("^%s*%- %[.%]") then
+    local indent = line:match("^(%s*)")
+    vim.api.nvim_put({ indent .. "- [ ] " }, "l", true, true)
+    vim.cmd("startinsert!")
+  else
+    vim.api.nvim_put({ "" }, "l", true, true)
+    vim.cmd("startinsert!")
+  end
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.keymap.set("n", "<C-CR>", new_checkbox, { buffer = true, desc = "New checkbox" })
+    vim.keymap.set("i", "<C-CR>", function()
+      vim.cmd("stopinsert")
+      new_checkbox()
+    end, { buffer = true, desc = "New checkbox" })
+  end,
+})
