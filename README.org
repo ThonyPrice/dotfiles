@@ -81,6 +81,14 @@ Prefix key is =Ctrl+Space=. Press prefix, release, then press the command key.
 | =prefix + z=        | Toggle pane zoom (fullscreen)  |
 | =prefix + !=        | Convert pane to window         |
 
+*** Resize mode (custom)
+
+| Command      | Description                          |
+|--------------+--------------------------------------|
+| =prefix + r= | Enter resize mode                    |
+| =h/j/k/l=    | Resize pane left/down/up/right       |
+| =Escape=     | Exit resize mode                     |
+
 *** Copy mode (vim-style)
 
 | Command      | Description              |
