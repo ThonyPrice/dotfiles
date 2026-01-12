@@ -39,3 +39,61 @@ Add dotfiles script to bin:
 Now the =dotfiles= script is executable from anywhere, use it to add install packages to this repository or new configs. This purpose of the script is to make it *simple keeping dotfiles up to date with system configurations*.
 
 Run =dotfiles --help= to see all available commands.
+
+** Tmux Cheatsheet
+
+Prefix key is =Ctrl+Space=. Press prefix, release, then press the command key.
+
+*** Sessions (workspaces)
+
+| Command                       | Description                  |
+|-------------------------------+------------------------------|
+| =tmux=                        | Start new session            |
+| =tmux new -s name=            | Start new session with name  |
+| =tmux ls=                     | List sessions                |
+| =tmux attach -t name=         | Attach to session            |
+| =tmux kill-session -t name=   | Kill session                 |
+| =prefix + d=                  | Detach from session          |
+| =prefix + $=                  | Rename session               |
+| =prefix + s=                  | Switch session (interactive) |
+
+*** Windows (tabs)
+
+| Command        | Description           |
+|----------------+-----------------------|
+| =prefix + c=   | Create new window     |
+| =prefix + ,=   | Rename window         |
+| =prefix + n=   | Next window           |
+| =prefix + p=   | Previous window       |
+| =prefix + 1-9= | Go to window number   |
+| =prefix + &=   | Kill window           |
+| =Alt+L=        | Next window (custom)  |
+| =Alt+H=        | Prev window (custom)  |
+
+*** Panes (splits)
+
+| Command             | Description                    |
+|---------------------+--------------------------------|
+| =prefix + "=        | Split horizontally             |
+| =prefix + %=        | Split vertically               |
+| =Ctrl + h/j/k/l=    | Navigate panes (vim-style)     |
+| =prefix + x=        | Kill pane                      |
+| =prefix + z=        | Toggle pane zoom (fullscreen)  |
+| =prefix + !=        | Convert pane to window         |
+
+*** Copy mode (vim-style)
+
+| Command      | Description              |
+|--------------+--------------------------|
+| =prefix + [= | Enter copy mode          |
+| =v=          | Start selection          |
+| =y=          | Copy selection           |
+| =q=          | Exit copy mode           |
+
+*** Other
+
+| Command          | Description       |
+|------------------+-------------------|
+| =prefix + I=     | Install plugins   |
+| =prefix + R=     | Reload config     |
+| =prefix + ?=     | List keybindings  |
