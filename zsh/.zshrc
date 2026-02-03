@@ -30,6 +30,7 @@ autoload -Uz compinit && compinit
 alias l='eza -lh --group-directories-first --icons=auto'
 alias k='kubectl'
 alias py='python'
+alias v='nvim'
 alias path='echo $PATH | tr ":" "\n"'
 
 alias ..='zd ./..'
