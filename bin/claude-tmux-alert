@@ -1,0 +1,43 @@
+#!/bin/bash
+# Toggle tmux window alert indicator when Claude Code needs attention
+# Usage: claude-tmux-alert on|off [window_id]
+
+ACTION=$1
+ALERT_ICON="▶"
+
+# Exit silently if not in tmux at all
+if ! tmux info &>/dev/null; then
+    exit 0
+fi
+
+# Get window - use argument, or TMUX_PANE, or current window
+if [[ -n "$2" ]]; then
+    WINDOW="$2"
+elif [[ -n "$TMUX_PANE" ]]; then
+    WINDOW=$(tmux display-message -p -t "$TMUX_PANE" '#{window_id}')
+else
+    WINDOW=$(tmux display-message -p '#{window_id}')
+fi
+
+CURRENT_NAME=$(tmux display-message -p -t "$WINDOW" '#{window_name}')
+
+case "$ACTION" in
+    on)
+        # Add alert icon if not already present
+        if [[ "$CURRENT_NAME" != *"$ALERT_ICON"* ]]; then
+            tmux rename-window -t "$WINDOW" "${ALERT_ICON} ${CURRENT_NAME}"
+        fi
+        ;;
+    off)
+        # Remove alert icon if present
+        if [[ "$CURRENT_NAME" == *"$ALERT_ICON"* ]]; then
+            NEW_NAME="${CURRENT_NAME//$ALERT_ICON /}"
+            NEW_NAME="${NEW_NAME//$ALERT_ICON/}"
+            tmux rename-window -t "$WINDOW" "$NEW_NAME"
+        fi
+        ;;
+    *)
+        echo "Usage: claude-tmux-alert on|off" >&2
+        exit 1
+        ;;
+esac
