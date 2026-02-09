@@ -27,6 +27,7 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 autoload -Uz compinit && compinit
 
 # Aliases
+alias cl='clear'
 alias l='eza -lh --group-directories-first --icons=auto'
 alias k='kubectl'
 alias py='python'
