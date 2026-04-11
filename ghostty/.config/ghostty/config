@@ -36,3 +36,6 @@ mouse-scroll-multiplier = 0.95
 # Send ctrl+enter to applications (nvim)
 keybind = ctrl+enter=unbind
 keybind = ctrl+enter=text:\x1b[13;5u
+
+# Fix general slowness on hyprland (https://github.com/ghostty-org/ghostty/discussions/3224)
+async-backend = epoll
