@@ -1,8 +1,11 @@
 #
 # ~/.zprofile
 #
-
-[[ -f ~/.zshrc ]] && . ~/.zshrc
+# Note: do NOT source .zshrc from here — zsh already sources it automatically
+# for interactive shells. Manually sourcing causes a double-load that re-runs
+# init scripts (e.g. omarchy-zsh's `eval "$(try init ...)"`) against functions
+# they previously defined, popping unexpected pickers.
+#
 
 # --- Personal configs ---
 
