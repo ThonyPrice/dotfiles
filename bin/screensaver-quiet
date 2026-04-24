@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# Minimal black-screen screensaver: a subtle quote + attribution in the bottom-right.
+# Replaces omarchy-launch-screensaver. Wired in via ~/.config/hypr/hypridle.conf.
+
+set -e
+
+# Don't double-fire if already running
+pgrep -f 'org.omarchy.screensaver' >/dev/null && exit 0
+
+# Refresh the time-of-day quote
+screensaver-quote 2>/dev/null || true
+
+# Reuse omarchy's ghostty screensaver class so hypr's existing window rules
+# (borderless, fullscreen, on-top) apply. Inside, just paint quote + author on black.
+exec ghostty \
+  --class=org.omarchy.screensaver \
+  --config-file="$HOME/.local/share/omarchy/default/ghostty/screensaver" \
+  --font-size=12 \
+  -e bash -c '
+    mapfile -t LINES < "$HOME/.config/omarchy/branding/screensaver.txt"
+    QUOTE="${LINES[0]:-}"
+    AUTHOR="${LINES[1]:-}"
+    cleanup() { printf "\e[?25h\e[0m"; clear; exit 0; }
+    trap cleanup EXIT INT TERM HUP
+    printf "\e]11;rgb:00/00/00\007"   # black background
+    printf "\e[?25l"                  # hide cursor
+    printf "\e[2J\e[H"                # clear screen
+    TLINES=$(tput lines)
+    TCOLS=$(tput cols)
+    ROW_QUOTE=$((TLINES - 4))
+    ROW_AUTHOR=$((TLINES - 2))
+    COL_QUOTE=$((TCOLS - ${#QUOTE} - 3))
+    COL_AUTHOR=$((TCOLS - ${#AUTHOR} - 3))
+    (( COL_QUOTE < 1 )) && COL_QUOTE=1
+    (( COL_AUTHOR < 1 )) && COL_AUTHOR=1
+    # Dim + faint gray (\e[2m = faint, \e[90m = bright black/gray)
+    printf "\e[%d;%dH\e[2;90m%s\e[0m" "$ROW_QUOTE" "$COL_QUOTE" "$QUOTE"
+    printf "\e[%d;%dH\e[2;90m%s\e[0m" "$ROW_AUTHOR" "$COL_AUTHOR" "$AUTHOR"
+    # Block on first byte of input, then exit
+    stty -echo -icanon time 0 min 1
+    head -c1 >/dev/null
+  '

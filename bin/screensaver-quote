@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+# Write a time-of-day-appropriate quote (with attribution) to the omarchy
+# screensaver text file. Format on disk: line 1 = quote, line 2 = "— Author".
+# Wired into ~/.config/hypr/hypridle.conf so it refreshes on each idle trigger.
+
+set -euo pipefail
+
+QUOTE_FILE="$HOME/.config/omarchy/branding/screensaver.txt"
+HOUR=$(date +%-H)
+
+# Format: "quote||Author"
+morning=(
+  "Lose an hour in the morning, you will spend the day looking for it.||Richard Whately"
+  "Each day is a little life.||Schopenhauer"
+  "There is more day to dawn.||Henry David Thoreau"
+  "The early morning has gold in its mouth.||Benjamin Franklin"
+  "Write it on your heart that every day is the best day in the year.||Ralph Waldo Emerson"
+  "The sun is new each day.||Heraclitus"
+  "Today is the first day of the rest of your life.||Charles Dederich"
+  "When you arise in the morning, think of what a precious privilege it is to be alive.||Marcus Aurelius"
+  "Morning is when I am awake and there is a dawn in me.||Henry David Thoreau"
+  "Morning without you is a dwindled dawn.||Emily Dickinson"
+  "An early-morning walk is a blessing for the whole day.||Henry David Thoreau"
+  "I have always been delighted at the prospect of a new day.||J.B. Priestley"
+  "Hope is the thing with feathers.||Emily Dickinson"
+  "There never was night that had no morn.||Dinah Maria Mulock Craik"
+  "He who has a why to live can bear almost any how.||Friedrich Nietzsche"
+  "The breeze at dawn has secrets to tell you. Don't go back to sleep.||Rumi"
+  "Joy comes in the morning.||Psalms"
+  "Begin doing what you want to do now.||Marie Beynon Ray"
+  "Each morning sees some task begin, each evening sees it close.||Henry Wadsworth Longfellow"
+  "Above all, do not lose your desire to walk.||Søren Kierkegaard"
+)
+
+afternoon=(
+  "How we spend our days is, of course, how we spend our lives.||Annie Dillard"
+  "The afternoon knows what the morning never suspected.||Robert Frost"
+  "Attention is the rarest and purest form of generosity.||Simone Weil"
+  "There is more to life than increasing its speed.||Mahatma Gandhi"
+  "Be here now.||Ram Dass"
+  "It is not enough to be busy. The question is: what are we busy about?||Henry David Thoreau"
+  "Without work, all life goes rotten.||Albert Camus"
+  "The reward of a thing well done is having done it.||Ralph Waldo Emerson"
+  "Time you enjoy wasting is not wasted time.||Marthe Troly-Curtin"
+  "A year from now you may wish you had started today.||Karen Lamb"
+  "Whatever you can do, or dream you can, begin it.||Goethe"
+  "The way to get started is to quit talking and begin doing.||Walt Disney"
+  "Do not wait; the time will never be just right.||Napoleon Hill"
+  "We are what we repeatedly do.||Will Durant"
+  "Either write something worth reading or do something worth writing.||Benjamin Franklin"
+  "Make the most of yourself, for that is all there is of you.||Ralph Waldo Emerson"
+  "Think with your whole body.||Taisen Deshimaru"
+  "The present moment is the only moment available to us.||Thích Nhất Hạnh"
+  "Work expands so as to fill the time available for its completion.||C. Northcote Parkinson"
+  "Done is better than perfect.||Sheryl Sandberg"
+)
+
+evening=(
+  "I have loved the stars too fondly to be fearful of the night.||Sarah Williams"
+  "All great and precious things are lonely.||John Steinbeck"
+  "The evening star, love's harbinger.||John Milton"
+  "After silence, that which comes nearest to the inexpressible is music.||Aldous Huxley"
+  "Stars, hide your fires.||William Shakespeare"
+  "Twilight drops her curtain down, and pins it with a star.||L.M. Montgomery"
+  "The day is done, and the darkness falls from the wings of Night.||Henry Wadsworth Longfellow"
+  "When the sun has set, no candle can replace it.||George R.R. Martin"
+  "Twilight, a time of pause when nature changes her guard.||Howard Thurman"
+  "Evening is the best part of the day.||Robert A. Heinlein"
+  "And here you are living, despite it all.||Rupi Kaur"
+  "Just living is not enough; one must have sunshine, freedom, and a little flower.||Hans Christian Andersen"
+  "The evening of life brings with it its lamp.||Joseph Joubert"
+  "We carry within us the wonders we seek without us.||Sir Thomas Browne"
+  "Sit, drink your wine, look at the stars.||Edward Abbey"
+  "The day, water, sun, moon, night — I do not have to purchase these things with money.||Plautus"
+  "Walking is man's best medicine.||Hippocrates"
+  "Sunsets are proof that endings can be beautiful too.||Beau Taplin"
+  "Don't be sad it's over, smile because it happened.||Dr. Seuss"
+  "What a strange thing! to be alive beneath cherry blossoms.||Kobayashi Issa"
+)
+
+night=(
+  "The quieter you become, the more you can hear.||Ram Dass"
+  "Silence is the sleep that nourishes wisdom.||Francis Bacon"
+  "There is a time for many words, and a time for sleep.||Homer"
+  "Sleep is the best meditation.||Dalai Lama"
+  "Night is a world lit by itself.||Antonio Porchia"
+  "We are such stuff as dreams are made on.||William Shakespeare"
+  "Those who dream by day are cognizant of many things which escape those who dream only by night.||Edgar Allan Poe"
+  "Even the darkest night will end and the sun will rise.||Victor Hugo"
+  "And the night shall be filled with music.||Henry Wadsworth Longfellow"
+  "Listen — are you breathing just a little, and calling it a life?||Mary Oliver"
+  "Now blessings light on him that first invented sleep!||Miguel de Cervantes"
+  "The deeper that sorrow carves into your being, the more joy you can contain.||Kahlil Gibran"
+  "There is no such thing as time.||Hermann Hesse"
+  "The starry heavens above me, the moral law within me.||Immanuel Kant"
+  "Rest is not idleness.||John Lubbock"
+  "May it be a light to you in dark places, when all other lights go out.||J.R.R. Tolkien"
+  "Listen to silence. It has so much to say.||Rumi"
+  "The world is full of magic things, patiently waiting for our senses to grow sharper.||W.B. Yeats"
+  "I will love the light for it shows me the way; I will endure the darkness for it shows me the stars.||Og Mandino"
+  "I love the silent hour of night.||Anne Brontë"
+)
+
+if   (( HOUR >= 5  && HOUR < 11 )); then pool=("${morning[@]}")
+elif (( HOUR >= 11 && HOUR < 17 )); then pool=("${afternoon[@]}")
+elif (( HOUR >= 17 && HOUR < 22 )); then pool=("${evening[@]}")
+else pool=("${night[@]}")
+fi
+
+entry="${pool[RANDOM % ${#pool[@]}]}"
+quote="${entry%%||*}"
+author="${entry##*||}"
+
+{
+  printf '%s\n' "$quote"
+  printf '— %s\n' "$author"
+} > "$QUOTE_FILE"
