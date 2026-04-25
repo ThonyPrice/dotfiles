@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-# Shadow ~/.local/share/omarchy/bin/omarchy-launch-screensaver to redirect every
-# caller (powermenu, hypridle defaults, etc.) to our minimal quiet screensaver.
-# Args are ignored — we have no "screensaver-off" toggle, so `force` is moot.
-
-exec screensaver-quiet

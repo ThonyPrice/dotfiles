@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# Shadow ~/.local/share/omarchy/bin/omarchy-cmd-screensaver.
+#
+# Runs INSIDE the ghostty that omarchy-launch-screensaver spawns via
+# `hyprctl dispatch exec`, so it inherits hyprland's PATH (where envs.conf
+# promotes ~/.local/bin first). Replaces omarchy's tte random-effect loop
+# with a static, dim quote in the bottom-right corner.
+#
+# Effect: every caller of omarchy-launch-screensaver (powermenu, default
+# hypridle, etc.) gets the discreet display without us needing to chase
+# PATH order across walker/dbus/systemd.
+
+set -e
+
+# Refresh the time-of-day quote
+screensaver-quote 2>/dev/null || true
+
+mapfile -t QLINES < "$HOME/.config/omarchy/branding/screensaver.txt"
+QUOTE="${QLINES[0]:-}"
+AUTHOR="${QLINES[1]:-}"
+
+cleanup() {
+  printf "\e[?25h\e[0m"
+  hyprctl keyword cursor:invisible false &>/dev/null || true
+  clear
+  exit 0
+}
+trap cleanup EXIT INT TERM HUP
+
+hyprctl keyword cursor:invisible true &>/dev/null || true
+
+printf "\e]11;rgb:00/00/00\007"   # black background
+printf "\e[?25l"                  # hide terminal cursor
+printf "\e[2J\e[H"                # clear
+
+TLINES=$(tput lines)
+TCOLS=$(tput cols)
+ROW_QUOTE=$((TLINES - 4))
+ROW_AUTHOR=$((TLINES - 2))
+COL_QUOTE=$((TCOLS - ${#QUOTE} - 3))
+COL_AUTHOR=$((TCOLS - ${#AUTHOR} - 3))
+(( COL_QUOTE < 1 )) && COL_QUOTE=1
+(( COL_AUTHOR < 1 )) && COL_AUTHOR=1
+
+printf "\e[%d;%dH\e[2;90m%s\e[0m" "$ROW_QUOTE" "$COL_QUOTE" "$QUOTE"
+printf "\e[%d;%dH\e[2;90m%s\e[0m" "$ROW_AUTHOR" "$COL_AUTHOR" "$AUTHOR"
+
+stty -echo -icanon time 0 min 1
+head -c1 >/dev/null
