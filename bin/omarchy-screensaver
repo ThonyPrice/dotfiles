@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Shadow ~/.local/share/omarchy/bin/omarchy-cmd-screensaver.
+# Shadow ~/.local/share/omarchy/bin/omarchy-screensaver.
 #
 # Runs INSIDE the ghostty that omarchy-launch-screensaver spawns via
 # `hyprctl dispatch exec`, so it inherits hyprland's PATH (where envs.conf
