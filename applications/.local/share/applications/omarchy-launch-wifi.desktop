@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Wifi
+Comment=Manage Wi-Fi networks (Impala TUI)
+Exec=omarchy-launch-wifi
+Terminal=false
+Icon=network-wireless
+Categories=Network;
+StartupNotify=false

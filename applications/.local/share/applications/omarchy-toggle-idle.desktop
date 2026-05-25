@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Toggle Idle / Awake
+Comment=Toggle hypridle — when off, the computer stays awake
+Exec=omarchy-toggle-idle
+Terminal=false
+Icon=preferences-system-power
+Categories=Settings;
+Keywords=idle;awake;sleep;hypridle;keep;stay;
+StartupNotify=false

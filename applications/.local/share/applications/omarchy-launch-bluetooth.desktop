@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Bluetooth
+Comment=Manage Bluetooth devices (bluetui)
+Exec=omarchy-launch-bluetooth
+Terminal=false
+Icon=bluetooth
+Categories=Settings;
+StartupNotify=false
