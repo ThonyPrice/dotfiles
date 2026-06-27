@@ -15,3 +15,8 @@ jobs:
         uses: ludeeus/action-shellcheck@2.0.0
         env:
           SHELLCHECK_OPTS: -e SC1091
+        with:
+          # Lint executable scripts only. The zsh/ and bash/ stow dirs are
+          # sourced rc files: zsh isn't a dialect ShellCheck supports, and
+          # rc files intentionally have no shebang (SC2148).
+          ignore_paths: zsh bash

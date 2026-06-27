@@ -30,9 +30,7 @@ echo "--- Setting up worktree '$BRANCH_NAME' from '$BASE_BRANCH' at '$WORKTREE_P
 #    -b <branch> creates the new branch
 #    <path> is the relative path for the new worktree directory
 #    <commit> is the branch/commit to base the new branch on ($BASE_BRANCH)
-git worktree add -b "feat/$BRANCH_NAME" "$WORKTREE_PATH" "$BASE_BRANCH"
-
-if [ $? -ne 0 ]; then
+if ! git worktree add -b "feat/$BRANCH_NAME" "$WORKTREE_PATH" "$BASE_BRANCH"; then
   echo "Error: Git worktree creation failed. Check for existing directories or branches."
   exit 1
 fi
