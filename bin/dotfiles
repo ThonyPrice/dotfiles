@@ -116,7 +116,9 @@ config_sync() {
     while IFS= read -r config; do
         if [[ -d "$config" ]]; then
             info "Stowing $config..."
-            stow "$config" --target="${HOME}"
+            # --restow re-applies cleanly so re-runs are idempotent instead
+            # of aborting (set -e) on an already-stowed config.
+            stow --restow "$config" --target="${HOME}"
             success "$config stowed"
         else
             echo "Warning: Config directory '$config' not found, skipping..." >&2

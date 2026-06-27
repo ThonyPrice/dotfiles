@@ -1,7 +1,6 @@
 #!/bin/bash
 
 EMACSDIR="${HOME}/.emacs.d"
-DOOMDIR="${EMACS_DIR}/bin/doom"
 DOOM_CONFIG="${HOME}/.doom.d"
 
 echo "Install Doom Emacs..."

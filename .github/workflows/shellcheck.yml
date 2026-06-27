@@ -1,0 +1,17 @@
+# Lint the repository's shell scripts with ShellCheck.
+# This repo is essentially a Bash project (the `dotfiles` CLI, bin/*, and
+# every omarchy-packages/install-*.sh), so ShellCheck is the relevant linter.
+name: ShellCheck
+on: [push, pull_request]
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@2.0.0
+        env:
+          SHELLCHECK_OPTS: -e SC1091
