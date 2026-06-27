@@ -3,13 +3,23 @@
 # ==============================================================================
 # Dotfiles Preparation Script
 # ==============================================================================
-# This should be run only ONCE
-# It removes system defaults that are replaced our own configs.
-# We can not symlink our configs (conveniently) without removing first.
+# This should be run only ONCE, on a fresh machine, before `dotfiles config sync`.
+# It removes the Omarchy default configs that our own configs replace. Stow can
+# not create a clean symlink over an existing file/directory, so without removing
+# these first it would either fail or partially fold into the defaults.
+#
+# Only configs that Omarchy seeds (or that ship a default we fully own) need
+# removing here; configs.list entries like nix/zinit/applications do not exist
+# on a fresh machine and are left for Stow to create.
 
-rm -f ~/.config/starship.toml
+# Home-level shell rc files
 rm -f ~/.bashrc ~/.bash_profile
-rm -f ~/.zshrc
+rm -f ~/.zshrc ~/.zprofile
 
+# ~/.config entries we replace wholesale
+rm -f ~/.config/starship.toml
 rm -frd ~/.config/hypr
+rm -frd ~/.config/ghostty
+rm -frd ~/.config/tmux
+rm -frd ~/.config/nvim
 

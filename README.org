@@ -11,32 +11,51 @@ This repository contains:
 - Personal shell scripts in =bin/=
 - A unified =dotfiles= management script for syncing configs and installing packages
 
-** Getting Started
+** Fresh Install
+
+Run these once, in order, on a new machine. Steps 1 and 5 (=prepare= /
+=finalize=) are only needed on a fresh install; steps 3 and 4 are the
+day-to-day commands (see [[*Usage][Usage]]).
 
 1. Clone this repository to =~/git/dotfiles=:
   #+begin_src bash
   git clone https://github.com/ThonyPrice/dotfiles.git ~/git/dotfiles
+  cd ~/git/dotfiles
   #+end_src
 
-2. Install packages:
+2. Remove the Omarchy default configs we replace, so Stow can create clean
+  symlinks instead of partially folding into existing directories:
   #+begin_src bash
-  cd ~/git/dotfiles
+  ./bin/dotfiles-prepare
+  #+end_src
+
+3. Install packages (this also installs =stow=, which the next step needs):
+  #+begin_src bash
   ./bin/dotfiles packages install
   #+end_src
 
-3. Sync your configurations:
+4. Sync configurations (symlinks every entry in =configs.list= via Stow):
   #+begin_src bash
   ./bin/dotfiles config sync
   #+end_src
 
+5. Finalize — add =bin/= to =PATH= and install Doom Emacs:
+  #+begin_src bash
+  ./bin/dotfiles-finalize
+  #+end_src
+
 ** Usage
 
-Add dotfiles script to bin:
-#+begin_src bash
-./bin/stow-bin
-#+end_src
+After a fresh install, =dotfiles= is on =PATH= (via =dotfiles-finalize=, which
+runs =stow-bin=), so it is executable from anywhere. Its purpose is to make it
+*simple keeping dotfiles up to date with system configurations*:
 
-Now the =dotfiles= script is executable from anywhere, use it to add install packages to this repository or new configs. This purpose of the script is to make it *simple keeping dotfiles up to date with system configurations*.
+#+begin_src bash
+dotfiles config sync          # re-apply config symlinks (idempotent)
+dotfiles config add <name>    # scaffold a new config to track
+dotfiles packages install     # (re)install all packages
+dotfiles packages add <name>  # scaffold a new package install script
+#+end_src
 
 Run =dotfiles --help= to see all available commands.
 
