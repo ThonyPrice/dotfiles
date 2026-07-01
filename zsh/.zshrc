@@ -25,6 +25,10 @@ alias v='nvim'
 alias da='direnv allow'
 alias path='echo $PATH | tr ":" "\n"'
 
+# gcloud auth convenience
+alias gauth='gcloud auth login'
+alias gadc='gcloud auth application-default login'
+
 alias ..='zd ./..'
 alias ...='zd ./../..'
 alias "cd .."='zd ./..'
