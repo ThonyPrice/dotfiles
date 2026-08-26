@@ -1,0 +1,5 @@
+#!/bin/bash
+# Launch Chromium inside the memory-capped slice (see ~/.config/systemd/user/chromium-mem.slice).
+# Exists as a wrapper (rather than inlining systemd-run in chromium.desktop) because
+# omarchy-launch-webapp extracts only the first word of the desktop file's Exec line.
+exec systemd-run --user --scope --quiet --slice=chromium-mem.slice -- /usr/bin/chromium "$@"

@@ -1,0 +1,9 @@
+[Unit]
+Description=Memory-capped slice for Chromium
+Documentation=man:systemd.resource-control(5)
+
+[Slice]
+# Soft cap: kernel aggressively reclaims Chromium's memory (pages idle tabs to
+# swap) and throttles it when exceeded. It NEVER OOM-kills, so the browser and
+# its tabs stay alive under pressure. Tune this value to taste.
+MemoryHigh=5G
