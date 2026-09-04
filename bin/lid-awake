@@ -1,0 +1,62 @@
+#!/bin/bash
+# Keep the machine running with the laptop lid closed.
+#
+# Drives lid-awake.service (see ~/.config/systemd/user/lid-awake.service), which
+# holds logind's handle-lid-switch inhibitor. Deliberately session-scoped rather
+# than a HandleLidSwitch=ignore drop-in in /etc: the toggle then needs no root,
+# and an omarchy update has nothing of ours to overwrite.
+#
+# The state flag persists the choice across reboots -- NOT `systemctl disable`,
+# which would delete the stow symlink to the unit file. See the unit for why.
+
+set -euo pipefail
+
+UNIT=lid-awake.service
+FLAG="${XDG_STATE_HOME:-$HOME/.local/state}/lid-awake/on"
+
+is_on() { systemctl --user is-active --quiet "$UNIT"; }
+
+announce() {
+    command -v notify-send &>/dev/null || return 0
+    notify-send -a "Lid" "󰌢  Lid awake: $1" "$2"
+}
+
+case "${1:-toggle}" in
+    on)
+        mkdir -p "$(dirname "$FLAG")" && touch "$FLAG"
+        # enable is idempotent and self-heals a missing default.target.wants link
+        systemctl --user enable "$UNIT" &>/dev/null
+        systemctl --user start "$UNIT"
+        announce "on" "Closing the lid keeps the system running."
+        ;;
+    off)
+        rm -f "$FLAG"
+        systemctl --user stop "$UNIT"
+        announce "off" "Closing the lid suspends as usual."
+        ;;
+    toggle)
+        if is_on; then exec "$0" off; else exec "$0" on; fi
+        ;;
+    is-on)
+        is_on
+        ;;
+    status)
+        is_on && echo on || echo off
+        ;;
+    bar)
+        # Waybar-style JSON for the omarchy bar's custom command module.
+        #
+        # When off, print NOTHING. Bar.qml does `data.text || String(raw).trim()`,
+        # so a JSON body with an empty "text" is falsy and it echoes the raw line
+        # into the bar. No output at all parses to {}, leaving text "" -- which is
+        # what WidgetButton's `visible: hasVisualContent` wants, hiding the widget
+        # the way omarchy's own indicators stay hidden while inactive.
+        if is_on; then
+            printf '{"text":"󰌢","tooltip":"Lid awake — closing the lid keeps the system running","class":"active"}\n'
+        fi
+        ;;
+    *)
+        echo "Usage: lid-awake [on|off|toggle|is-on|status|bar]" >&2
+        exit 1
+        ;;
+esac

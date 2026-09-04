@@ -1,0 +1,20 @@
+[Unit]
+Description=Keep the system awake while the laptop lid is closed
+Documentation=man:systemd-inhibit(1) man:logind.conf(5)
+
+# The state flag, not `systemctl enable`, is what persists the toggle across
+# reboots. This unit file is a stow symlink, and `systemctl --user disable`
+# deletes symlinks to a unit found anywhere in the search path -- it would eat
+# the link into the dotfiles repo. So the unit stays enabled for good and
+# lid-awake(1) flips this condition instead.
+ConditionPathExists=%h/.local/state/lid-awake/on
+
+[Service]
+# logind's low-level "handle-lid-switch" lock is always honored, unlike the
+# "sleep"/"idle" locks that LidSwitchIgnoreInhibited=yes discards by default.
+# systemd-inhibit holds the lock for the lifetime of the command it runs, so
+# the lock lives exactly as long as this unit is active.
+ExecStart=/usr/bin/systemd-inhibit --what=handle-lid-switch --who=lid-awake --why="Lid-close suspend disabled by the user" --mode=block /usr/bin/sleep infinity
+
+[Install]
+WantedBy=default.target
