@@ -19,7 +19,6 @@ rm -f ~/.zshrc ~/.zprofile
 # ~/.config entries we replace wholesale
 rm -f ~/.config/starship.toml
 rm -frd ~/.config/hypr
-rm -frd ~/.config/ghostty
 rm -frd ~/.config/tmux
 rm -frd ~/.config/nvim
 
