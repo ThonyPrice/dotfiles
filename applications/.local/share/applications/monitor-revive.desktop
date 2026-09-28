@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=Revive External Monitor
+GenericName=Display Fix
+Comment=Relight a dock monitor that stays dark after re-plugging (aquamarine 0.15.0 workaround)
+# Temporary: see ~/.local/bin/monitor-revive for why, and when to delete this.
+Exec=/home/thony/.local/bin/monitor-revive
+Terminal=false
+Icon=video-display
+Type=Application
+Categories=Settings;HardwareSettings;
+Keywords=monitor;display;screen;dock;external;fix;

@@ -1,0 +1,80 @@
+#!/bin/bash
+# Bring back an external monitor that stays dark after re-plugging the dock.
+#
+# TEMPORARY workaround for an aquamarine 0.15.0 regression: when a dock output
+# disappears, aquamarine drops the connector without ever disabling its CRTC in
+# the kernel. The replugged monitor comes back as a new MST connector (DP-3 ->
+# DP-4), gets the same CRTC, and every modeset fails with EINVAL because the
+# kernel still has the dead connector bound to it ("[ENCODER:DP-MST B] in use
+# on [CRTC:pipe B] by [CONNECTOR:DP-3]"). hyprctl shows the monitor at 0x0.
+#   https://github.com/hyprwm/aquamarine/issues/386 (fixed upstream by PR #410)
+#   https://github.com/omacom/omarchy/issues/11019
+# Delete this script and monitor-revive.desktop once `pacman -Q aquamarine`
+# is past 0.15.0-2 and a replug lights the monitor on its own.
+#
+# 1. A round trip through a text VT makes fbcon do a full modeset, which is the
+#    only thing that can release the dead connector's CRTC (userspace can no
+#    longer name that connector). logind lets the active session switch VTs,
+#    so no root is needed.
+# 2. Returning, aquamarine only replays its stale CRTC state and Hyprland keeps
+#    the monitor at 0x0, and `hyprctl reload` does not help as the rules are
+#    unchanged. Disabling and re-adding each external output forces a real
+#    modeset with the same rule monitors.lua applies.
+
+set -euo pipefail
+
+SEAT=/org/freedesktop/login1/seat/seat0
+SESSION=${XDG_SESSION_ID:-$(loginctl show-user "$USER" -p Display --value)}
+
+announce() {
+    command -v notify-send &>/dev/null || return 0
+    notify-send -a "Display" "󰍹  $1" "${2:-}"
+}
+
+switch_vt() {
+    busctl call org.freedesktop.login1 "$SEAT" org.freedesktop.login1.Seat SwitchTo u "$1"
+}
+
+session_active() {
+    [[ $(loginctl show-session "$SESSION" -p Active --value) == yes ]]
+}
+
+internal=$(omarchy-hyprland-monitor-laptop)
+internal=${internal:-eDP-1}
+home_vt=$(loginctl show-session "$SESSION" -p VTNr --value)
+away_vt=3
+[[ $home_vt == "$away_vt" ]] && away_vt=4
+
+switch_vt "$away_vt"
+sleep 1.5
+switch_vt "$home_vt"
+
+# Wait for the session to be foreground again, then for aquamarine's restore.
+for _ in {1..50}; do session_active && break; sleep 0.1; done
+sleep 2
+
+mapfile -t externals < <(hyprctl monitors all -j |
+    jq -r --arg internal "$internal" '.[] | select(.name != $internal).name')
+
+if ((${#externals[@]} == 0)); then
+    announce "No external monitor found" "Is the dock plugged in?"
+    exit 1
+fi
+
+for out in "${externals[@]}"; do
+    # Names come from hyprctl and are spliced into Lua, so refuse anything odd.
+    [[ $out =~ ^[A-Za-z0-9._-]+$ ]] || continue
+    hyprctl eval "hl.monitor({ output = \"$out\", disabled = true })" >/dev/null
+    sleep 0.5
+    hyprctl eval "hl.monitor({ output = \"$out\", mode = \"preferred\", position = \"auto\", scale = 1, mirror = \"$internal\" })" >/dev/null
+done
+
+sleep 1
+dark=$(hyprctl monitors all -j | jq -r --arg internal "$internal" \
+    '[.[] | select(.name != $internal and (.width == 0 or .disabled)).name] | join(", ")')
+
+if [[ -n $dark ]]; then
+    announce "Monitor still dark: $dark" "Unplug the dock, wait a few seconds, replug and try again."
+    exit 1
+fi
+announce "External monitor revived" "${externals[*]} mirroring $internal"
