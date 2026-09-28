@@ -1,0 +1,36 @@
+#!/bin/bash
+# Run by `omarchy-hook post-update` after every Omarchy update. Stowed from the
+# dotfiles repo's `omarchy` package; only this file is linked, the rest of
+# ~/.config/omarchy stays Omarchy's.
+#
+# Updates write into stowed configs: `cat >` edits land in the repo (uncommitted
+# changes), while `sed -i` swaps the symlink for a plain copy that the repo no
+# longer sees and that makes `dotfiles config sync` abort. Flag both, plus any
+# temporary workaround whose upstream fix may have arrived.
+
+hook_dir=$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")
+repo=$(git -C "$hook_dir" rev-parse --show-toplevel 2>/dev/null) || exit 0
+repo_display=${repo/#$HOME/\~}
+
+broken=$("$repo/bin/dotfiles" config check 2>/dev/null | grep -c '^✗')
+if ((broken > 0)); then
+  omarchy-notification-send -u critical -g 󰌸 "Dotfiles: $broken link(s) broken" \
+    "The update replaced stowed files with copies. Run: dotfiles config check"
+fi
+
+changes=$(git -C "$repo" status --porcelain | wc -l)
+if ((changes > 0)); then
+  omarchy-notification-send -u normal -g 󰊢 "Dotfiles: $changes uncommitted change(s)" \
+    "The update may have edited stowed files. Review: git -C $repo_display status"
+fi
+
+# monitor-revive works around aquamarine 0.15.0 leaving dock monitors dark after
+# a replug (hyprwm/aquamarine#386). Nag on each update past the broken release
+# until the workaround is deleted.
+if [[ -e $HOME/.local/bin/monitor-revive ]] && aquamarine=$(pacman -Q aquamarine 2>/dev/null); then
+  version=${aquamarine#* }
+  if (($(vercmp "$version" 0.15.0-2) > 0)); then
+    omarchy-notification-send -u normal -g 󰍹 "aquamarine is now $version" \
+      "Replug the dock without Revive External Monitor. If it lights up, delete bin/monitor-revive and monitor-revive.desktop."
+  fi
+fi

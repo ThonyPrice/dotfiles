@@ -128,6 +128,57 @@ config_sync() {
     success "All configurations synced"
 }
 
+# Report stowed files whose target no longer resolves into the repo. Omarchy
+# commands that `sed -i` a config (font, text size, migrations) replace the
+# symlink with a plain copy: the repo stops seeing edits, and the next
+# `config sync` aborts every package with "cannot stow ... over existing target".
+check_package() {
+    local pkg_dir="$1" target_dir="$2"
+    local file rel target reason
+
+    # Mirrors stow's default ignore list, so skipped files are not reported.
+    while IFS= read -r -d '' file; do
+        rel="${file#"$pkg_dir"/}"
+        target="${target_dir}/${rel}"
+        [[ $(readlink -f "$target") == "$file" ]] && continue
+
+        if [[ -L "$target" ]]; then
+            reason="points elsewhere"
+        elif [[ -e "$target" ]]; then
+            reason="plain file, not a link"
+        else
+            reason="missing"
+        fi
+        echo "✗ ${target/#$HOME/\~} ($reason)"
+        broken=$((broken + 1))
+    done < <(find "$pkg_dir" \( -name .git -o -name CVS -o -name .svn -o -name .hg -o -name _darcs \) -prune \
+        -o -type f ! -name .gitignore ! -name .gitmodules ! -name .cvsignore ! -name '*~' ! -name '#*#' ! -name '.#*' \
+        ! \( -path "$pkg_dir/README*" -o -path "$pkg_dir/LICENSE*" -o -path "$pkg_dir/COPYING" \) -print0)
+}
+
+config_check() {
+    validate_repo
+
+    local configs config broken=0
+    configs=$(read_manifest "$CONFIGS_LIST")
+
+    while IFS= read -r config; do
+        [[ -n "$config" && -d "${REPO_PATH}/${config}" ]] || continue
+        check_package "${REPO_PATH}/${config}" "$HOME"
+    done <<< "$configs"
+
+    # bin/ is stowed separately by stow-bin
+    check_package "${REPO_PATH}/bin" "${HOME}/.local/bin"
+
+    if [[ $broken -gt 0 ]]; then
+        echo "" >&2
+        echo "$broken stowed file(s) broken. If a plain file matches the repo copy (cmp), delete it" >&2
+        echo "and run 'dotfiles config sync'; otherwise move its changes into the repo first." >&2
+        return 1
+    fi
+    success "All stowed files link into the repo"
+}
+
 # Add a new configuration
 config_add() {
     local config_name="$1"
@@ -266,6 +317,7 @@ Usage:
 
 Commands:
   config sync              Sync all configurations using GNU Stow
+  config check             Report stowed files that no longer link into the repo
   config add <name>        Add a new configuration to the repository
 
   packages install         Install all packages from the manifest
@@ -276,6 +328,7 @@ Options:
 
 Examples:
   dotfiles config sync            # Sync all configs (nix, hypr, etc.)
+  dotfiles config check           # Find links Omarchy replaced with copies
   dotfiles config add kitty       # Add kitty config
   dotfiles packages install       # Install all packages
   dotfiles packages add firefox   # Add firefox package
@@ -294,6 +347,9 @@ parse_command() {
             case "$subcommand" in
                 sync)
                     config_sync
+                    ;;
+                check)
+                    config_check
                     ;;
                 add)
                     config_add "$@"
