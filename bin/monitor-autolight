@@ -1,0 +1,43 @@
+#!/bin/bash
+# Light up an external monitor that stays dark right after it is plugged in.
+#
+# Run by the monitor.added hook in monitors.lua. On the ThinkPad's own HDMI
+# port (HDMI-A-1) the first EDID/DDC read is often corrupt (kernel: "EDID has
+# corrupt header", i915 "Unexpected DP dual mode adaptor ID"), the first
+# modeset fails and Hyprland leaves the output disabled at 0x0 for good. Seen
+# with both the Dell P2723DE and an office Philips, so it is the port, not the
+# cable. A `hyprctl reload` re-applies the monitor rules and does a real
+# modeset, which succeeds once the kernel gets a clean EDID read.
+#
+# For the dock MST replug failure a reload does not help; use monitor-revive.
+
+set -euo pipefail
+
+LOCK="${XDG_RUNTIME_DIR:-/tmp}/monitor-autolight.lock"
+exec 9>"$LOCK"
+# A reload can fire monitor.added again; let the running instance finish.
+flock -n 9 || exit 0
+
+internal=$(omarchy-hyprland-monitor-laptop 2>/dev/null || true)
+internal=${internal:-eDP-1}
+
+dark_outputs() {
+    hyprctl monitors all -j | jq -r --arg internal "$internal" \
+        '[.[] | select(.name != $internal and (.disabled or .width == 0)).name] | join(", ")'
+}
+
+# Give Hyprland's own first modeset a chance before second-guessing it.
+sleep 2
+for _ in 1 2 3; do
+    [[ -z $(dark_outputs) ]] && exit 0
+    hyprctl reload >/dev/null
+    sleep 3
+done
+
+dark=$(dark_outputs)
+[[ -z $dark ]] && exit 0
+if command -v notify-send &>/dev/null; then
+    notify-send -a "Display" "󰍹  Monitor still dark: $dark" \
+        "Try replugging the cable, or run monitor-revive for dock monitors."
+fi
+exit 1
