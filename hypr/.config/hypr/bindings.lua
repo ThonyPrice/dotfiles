@@ -12,6 +12,10 @@ o.bind("SUPER + SHIFT + T", "Activity", { tui = "btop" })
 hl.unbind("SUPER + SHIFT + W")
 o.bind("SUPER + SHIFT + W", "Typora", { launch = "typora --enable-wayland-ime" })
 
+-- Fuzzy file/folder search (stand-in for Walker's "/" prefix); see bin/find-file.
+-- MINUS is where "/" sits on a US layout, and an easy right-hand key on Swedish.
+o.bind("SUPER + SHIFT + MINUS", "Find file", "find-file")
+
 -- Unbind defaults that conflict with the vim-style layout below.
 hl.unbind("SUPER + J")        -- Toggle window split (rebound to SUPER+S)
 hl.unbind("SUPER + K")        -- Keybindings menu (rebound to SUPER+CTRL+K)

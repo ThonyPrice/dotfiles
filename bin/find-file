@@ -1,0 +1,50 @@
+#!/bin/bash
+# Fuzzy-find a file or folder under $HOME and open it -- the Quattro stand-in
+# for Walker's "/" file search, which the Omarchy shell menu doesn't have.
+#
+# With no argument, opens a floating terminal (app-id TUI.float, which Omarchy
+# already floats and centres) that re-runs this script with --pick.
+#
+# In the picker:
+#   Enter      open the selection (folders go to Files/Nautilus, files to their
+#              default app via xdg-open)
+#   Alt+Enter  open the selection's containing folder in Files
+#   Ctrl+D     show folders only, Ctrl+F files only, Ctrl+A both
+
+set -euo pipefail
+
+if [[ ${1:-} != --pick ]]; then
+    exec setsid uwsm-app -- xdg-terminal-exec --app-id=TUI.float --title="Find file" \
+        -e "$(readlink -f "${BASH_SOURCE[0]}")" --pick
+fi
+
+cd "$HOME"
+
+# fd skips hidden and gitignored paths by default; folders get a trailing /.
+list='fd --strip-cwd-prefix --exclude node_modules --exclude go/pkg'
+
+open_detached() { setsid -f uwsm-app -- xdg-open "$1" &>/dev/null; }
+
+out=$(
+    $list | fzf \
+        --prompt='  ' --header='enter open · alt-enter open folder · ctrl-d dirs · ctrl-f files · ctrl-a all' \
+        --scheme=path --expect=alt-enter \
+        --preview='if [[ -d {} ]]; then eza -1 --icons --group-directories-first --color=always {}; else bat --color=always --style=plain --line-range=:200 {} 2>/dev/null || file -b {}; fi' \
+        --preview-window='right,50%,border-left' \
+        --bind="ctrl-d:reload($list --type d)" \
+        --bind="ctrl-f:reload($list --type f)" \
+        --bind="ctrl-a:reload($list)"
+) || exit 0
+
+key=$(sed -n 1p <<<"$out")
+pick=$(sed -n 2p <<<"$out")
+[[ -n $pick ]] || exit 0
+
+if [[ $key == alt-enter ]]; then
+    open_detached "$(dirname "$HOME/$pick")"
+else
+    open_detached "$HOME/$pick"
+fi
+
+# Give the detached opener a moment before the terminal (and its session) exits.
+sleep 0.3
