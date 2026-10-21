@@ -59,6 +59,18 @@ dotfiles packages add <name>  # scaffold a new package install script
 
 Run =dotfiles --help= to see all available commands.
 
+** Updating Paper Desktop
+
+Paper is built from our own PKGBUILD in =omarchy-packages/pkgbuilds/= (the AUR
+=paper-desktop-bin= is stale), so =omarchy update= does not pick up new
+releases, and the in-app "Check for updates..." can't install them either.
+When the app reports a new version, re-run the install script; it always
+builds the latest release:
+
+#+begin_src bash
+~/git/dotfiles/omarchy-packages/install-paper.sh
+#+end_src
+
 ** Tmux Cheatsheet
 
 Prefix key is =Ctrl+Space=. Press prefix, release, then press the command key.

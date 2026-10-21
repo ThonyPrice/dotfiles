@@ -1,0 +1,31 @@
+# Local fork of AUR paper-desktop-bin: Paper is Electron now (no webkit2gtk),
+# and the deb's own file modes are kept instead of chmod-ing everything to 644.
+# Built by ../../install-paper.sh, which also updates (always pulls the latest deb).
+pkgname=paper-desktop-bin
+pkgver=0.5.16
+pkgrel=1
+pkgdesc="Paper is a modern and powerful design tool that helps you create, share, and ship your best work."
+arch=('x86_64')
+url="https://paper.design"
+license=('custom')
+options=('!debug' '!strip')
+depends=('gtk3' 'nss' 'libnotify' 'libxss' 'libxtst' 'xdg-utils' 'at-spi2-core'
+         'util-linux-libs' 'libsecret' 'alsa-lib' 'libcups' 'mesa')
+optdepends=('libappindicator-gtk3: tray icon')
+source=("${pkgname%-bin}.deb::https://download.paper.design/linux/deb")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir"
+  bsdtar -xf "${pkgname%-bin}.deb" control.tar.xz
+  bsdtar -xf control.tar.xz ./control
+  grep -E '^Version:' control | sed 's/Version: //' | cut -d'-' -f1
+}
+
+package() {
+  bsdtar -xf "$srcdir/${pkgname%-bin}.deb" -C "$srcdir" data.tar.xz
+  bsdtar -xpf "$srcdir/data.tar.xz" -C "$pkgdir"
+
+  install -d "$pkgdir/usr/bin"
+  ln -sf /opt/Paper/paper-desktop "$pkgdir/usr/bin/paper-desktop"
+}
