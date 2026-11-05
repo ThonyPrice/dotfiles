@@ -5,7 +5,9 @@
 -- on SUPER+ALT+RETURN, browser/files/music/signal/obsidian/webapps); only the
 -- deltas from stock remain here.
 
--- Activity monitor (no longer a default).
+-- Activity monitor. Omarchy 4.5 ships this exact bind as a default again;
+-- unbind first so the key doesn't launch btop twice. Drop both lines once on 4.5+.
+hl.unbind("SUPER + SHIFT + T")
 o.bind("SUPER + SHIFT + T", "Activity", { tui = "btop" })
 
 -- Typora instead of Omawrite.
@@ -23,6 +25,8 @@ hl.unbind("SUPER + L")        -- Toggle workspace layout
 hl.unbind("SUPER + S")        -- Toggle scratchpad (rebound to SUPER+CTRL+S)
 hl.unbind("SUPER + ALT + K")  -- Tmux keybindings menu (SUPER+ALT+K resizes)
 hl.unbind("SUPER + CTRL + K") -- Herdr keybindings menu (SUPER+CTRL+K shows main menu)
+hl.unbind("SUPER + CTRL + S") -- Share menu (SUPER+CTRL+S toggles scratchpad)
+hl.unbind("SUPER + ALT + L")  -- Cycle workspace layout back, 4.5+ (SUPER+ALT+L resizes)
 
 -- Rebind...
 o.bind("SUPER + S", "Toggle window split", hl.dsp.layout("togglesplit"))
