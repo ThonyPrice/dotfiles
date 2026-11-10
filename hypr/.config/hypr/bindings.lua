@@ -5,11 +5,6 @@
 -- on SUPER+ALT+RETURN, browser/files/music/signal/obsidian/webapps); only the
 -- deltas from stock remain here.
 
--- Activity monitor. Omarchy 4.5 ships this exact bind as a default again;
--- unbind first so the key doesn't launch btop twice. Drop both lines once on 4.5+.
-hl.unbind("SUPER + SHIFT + T")
-o.bind("SUPER + SHIFT + T", "Activity", { tui = "btop" })
-
 -- Typora instead of Omawrite.
 hl.unbind("SUPER + SHIFT + W")
 o.bind("SUPER + SHIFT + W", "Typora", { launch = "typora --enable-wayland-ime" })
