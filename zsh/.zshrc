@@ -24,6 +24,8 @@ alias py='python'
 alias v='nvim'
 alias da='direnv allow'
 alias path='echo $PATH | tr ":" "\n"'
+alias clr='claude --resume'
+alias cwt='./scripts/create-worktree.sh'
 
 # gcloud auth convenience
 alias gauth='gcloud auth login'
