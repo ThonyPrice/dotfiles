@@ -1,0 +1,36 @@
+[Unit]
+Description=Mount the shared Google Drive at ~/Drive (rclone)
+Documentation=man:rclone(1) https://rclone.org/commands/rclone_mount/
+
+# Inert until `rclone config` has created the "gdrive" remote. This is also the
+# off switch: the unit file is a stow symlink, and `systemctl --user disable`
+# would delete the link into the dotfiles repo, so stop it and leave it enabled.
+ConditionPathExists=%h/.config/rclone/rclone.conf
+
+[Service]
+# rclone signals readiness once the mount is up, so `start` blocks until
+# ~/Drive is actually usable.
+Type=notify
+ExecStartPre=/usr/bin/mkdir -p %h/Drive
+# Streams on demand like Google Drive for desktop's "streaming" mode:
+# --vfs-cache-mode full   files are fetched on first open and cached on disk,
+#                         which editors and .docx tooling need (seek, rewrite)
+# --vfs-cache-max-size    bounds that cache; the oldest files are evicted first
+# --vfs-write-back        delay before a closed file is uploaded
+# --poll-interval         how quickly changes made by others show up
+# --dir-cache-time        safe to keep long, since polling invalidates it
+ExecStart=/usr/bin/rclone mount gdrive: %h/Drive \
+    --vfs-cache-mode full \
+    --vfs-cache-max-size 10G \
+    --vfs-cache-max-age 720h \
+    --vfs-write-back 5s \
+    --poll-interval 15s \
+    --dir-cache-time 24h
+ExecStop=/usr/bin/fusermount3 -u %h/Drive
+# The user manager has no network-online.target to order after, so a start
+# that races the network at login simply retries.
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target
