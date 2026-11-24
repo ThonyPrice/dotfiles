@@ -9,3 +9,7 @@
 # Temporary files
 *.tmp
 *.bak
+
+# Herdr app writes these into every mod folder on start
+herdr-app/.config/herdr-app/mods/*/gpui-kit.d.ts
+herdr-app/.config/herdr-app/mods/*/jsconfig.json
