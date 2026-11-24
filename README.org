@@ -59,6 +59,28 @@ dotfiles packages add <name>  # scaffold a new package install script
 
 Run =dotfiles --help= to see all available commands.
 
+** Servers
+
+The homelab boxes (=homelab-0=, =homelab-1=; repo =ThonyPrice/homelab=) get
+the terminal half of these dotfiles, so a shell there feels like the laptop.
+Both the =thony= and =agent= users get it.
+
+- =servers.list= names the configs stowed there: a subset of =configs.list=.
+- Omarchy's shell layer (aliases, functions, tool init) comes from the
+  =omarchy-zsh= package on the laptop. That package builds it from
+  [[https://github.com/omacom-io/omadots][omadots]], so servers clone omadots
+  directly and link =~/.config/shell= to it. =.zshrc= loads whichever exists.
+- =dotfiles server sync= pulls this repo and omadots and re-stows
+  =servers.list=. A systemd timer runs it hourly for each user. The homelab
+  repo's =ansible/roles/dotfiles= installs the tools, clones this repo to
+  =~/git/dotfiles= and sets up the timer.
+- Merging to =main= is the deploy: the boxes pick changes up within the hour.
+- If a sync fails, the next login prints =dotfiles sync failed= with the
+  journal command to look at.
+
+Tools come from Ubuntu's packages, installed by the homelab role. A config
+that needs a new tool needs a matching change there.
+
 ** Updating Paper Desktop
 
 Paper is built from our own PKGBUILD in =omarchy-packages/pkgbuilds/= (the AUR

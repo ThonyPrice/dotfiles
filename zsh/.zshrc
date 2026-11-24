@@ -1,16 +1,27 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-# Load omarchy-zsh configuration
-[[ -f /usr/share/omarchy-zsh/shell/zoptions ]] && source /usr/share/omarchy-zsh/shell/zoptions
-[[ -f /usr/share/omarchy-zsh/shell/all ]] && source /usr/share/omarchy-zsh/shell/all
+# Load Omarchy's shell config: from the omarchy-zsh package on the laptop, from
+# an omadots clone on servers (`dotfiles server sync` links it to ~/.config/shell)
+if [[ -d /usr/share/omarchy-zsh/shell ]]; then
+  _omarchy_shell=/usr/share/omarchy-zsh/shell
+else
+  _omarchy_shell=~/.config/shell
+fi
+[[ -f $_omarchy_shell/zoptions ]] && source $_omarchy_shell/zoptions
+[[ -f $_omarchy_shell/all ]] && source $_omarchy_shell/all
+unset _omarchy_shell
+
+# Servers: the hourly `dotfiles server sync` failed, so this box is drifting
+[[ -f ~/.local/state/dotfiles/sync-error ]] &&
+  print -P "%F{yellow}dotfiles sync failed:%f $(<~/.local/state/dotfiles/sync-error)"
 
 # --- Personal config ---
 
 # zsh plugin manager configs
 source ~/.config/zinit/config
 
-eval "$(direnv hook zsh)"
+command -v direnv &>/dev/null && eval "$(direnv hook zsh)"
 
 # Case-insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
