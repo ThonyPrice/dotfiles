@@ -1,0 +1,10 @@
+[Unit]
+Description=Slice for herdr terminal holders, outside systemd-oomd's reach
+Documentation=man:systemd.resource-control(5) man:systemd-oomd.service(8)
+
+[Slice]
+# Omarchy marks app.slice ManagedOOMSwap/MemoryPressure=kill, and oomd kills a
+# whole cgroup at once. herdr runs every pane in one hc-hold-*.service, so it is
+# always the biggest candidate there and a kill took down every terminal.
+# This slice sets no ManagedOOM*, so oomd never picks it; under real OOM the
+# kernel kills a single process instead (the holder has OOMPolicy=continue).
