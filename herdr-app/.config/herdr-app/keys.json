@@ -15,10 +15,10 @@
     "alt-l": "pane.go:right",
     "alt-left": "tab.prev",
     "alt-right": "tab.next",
-    "alt-shift-h": "pane.swap:left",
-    "alt-shift-j": "pane.swap:down",
-    "alt-shift-k": "pane.swap:up",
-    "alt-shift-l": "pane.swap:right",
+    "alt-shift-h": "tab.prev",
+    "alt-shift-j": "space.next",
+    "alt-shift-k": "space.prev",
+    "alt-shift-l": "tab.next",
     "ctrl-+": "app.zoom_in",
     "ctrl--": "app.zoom_out",
     "ctrl-0": "app.zoom_reset",
@@ -108,7 +108,11 @@
     },
     "alt-shift-up": "agent.prev",
     "alt-shift-down": "agent.next",
-    "ctrl-space": "mod.open:tmux-prefix"
+    "ctrl-space": "mod.open:tmux-prefix",
+    "ctrl-alt-shift-h": "pane.swap:left",
+    "ctrl-alt-shift-j": "pane.swap:down",
+    "ctrl-alt-shift-k": "pane.swap:up",
+    "ctrl-alt-shift-l": "pane.swap:right"
   },
   "terminal": {
     "ctrl-backspace": "send:\u0017",
