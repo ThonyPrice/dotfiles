@@ -81,6 +81,60 @@ Both the =thony= and =agent= users get it.
 Tools come from Ubuntu's packages, installed by the homelab role. A config
 that needs a new tool needs a matching change there.
 
+** Workaround: keep herdr out of systemd-oomd's reach
+
+*Temporary. Follow up on 2026-12-01:* check
+[[https://github.com/herdrdev/herdr/issues/6180][herdrdev/herdr#6180]] and remove
+this once herdr ships a fix.
+
+*Problem.* Omarchy lets systemd-oomd kill anything in =app.slice= when swap
+passes 90% or memory pressure stays high (=/usr/lib/systemd/user/app.slice.d/10-oomd.conf=,
+=/etc/systemd/oomd.conf.d/10-omarchy.conf=). oomd kills a whole cgroup at once.
+herdr-core runs every pane in one transient unit, =hc-hold-<id>.service=,
+started with =systemd-run= into =app.slice=. With several agent worktrees and
+their Docker stacks running, the holder is always the largest candidate, so
+one kill ended every terminal and agent at once. On 2026-11-24 this happened
+three times in an hour (=journalctl --user | grep hc-hold= shows
+=systemd-oomd killed N process(es) in this unit=).
+
+*Workaround* (in =systemd/.config/systemd/user/=):
+- =herdr.slice= is a slice with no =ManagedOOM*= policy, so oomd never picks it.
+- =hc-hold-.service.d/slice.conf= is a prefix drop-in that applies to every
+  =hc-hold-*.service= and sets =Slice=herdr.slice=.
+
+Under real memory exhaustion the kernel OOM killer now kills a single process
+(the biggest one), and the holder survives it because herdr sets
+=OOMPolicy=continue= on it. The trade-off: without oomd's early kill, the
+machine can stall for a while before the kernel steps in.
+
+*Gotchas:*
+- systemd ignores a drop-in directory that is itself a symlink. =~/.config/systemd/user/hc-hold-.service.d/=
+  must be a real directory with only =slice.conf= linked inside it.
+  =dotfiles config sync= creates systemd =*.d= directories before stowing so
+  Stow can't fold them into a directory symlink.
+- A holder only changes slice when it starts, so a holder that was already
+  running when this was installed stays in =app.slice= until herdr restarts it.
+
+Check it is active:
+
+#+begin_src bash
+systemctl --user list-units 'hc-hold-*' --no-legend | awk '{print $1}' \
+  | xargs -r systemctl --user show -p Slice   # expect Slice=herdr.slice
+oomctl | grep Path:                           # herdr.slice must not be listed
+#+end_src
+
+*Removing it* once herdr fixes #6180 (for example by running each terminal in
+its own scope, or by offering a slice option):
+
+#+begin_src bash
+rm ~/git/dotfiles/systemd/.config/systemd/user/herdr.slice
+rm -r ~/git/dotfiles/systemd/.config/systemd/user/hc-hold-.service.d
+rm -r ~/.config/systemd/user/herdr.slice ~/.config/systemd/user/hc-hold-.service.d
+systemctl --user daemon-reload
+#+end_src
+
+Not on the servers: =systemd= is not in =servers.list=.
+
 ** Updating Paper Desktop
 
 Paper is built from our own PKGBUILD in =omarchy-packages/pkgbuilds/= (the AUR

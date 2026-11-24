@@ -125,6 +125,12 @@ config_sync() {
     while IFS= read -r config; do
         if [[ -d "$config" ]]; then
             info "Stowing $config..."
+            # systemd ignores a drop-in directory (foo.service.d) that is
+            # itself a symlink, so create those as real directories first;
+            # Stow then links only the files inside instead of folding them.
+            while IFS= read -r dropin; do
+                mkdir -p "${HOME}/${dropin#"$config"/}"
+            done < <(find "$config" -type d -path '*/systemd/*' -name '*.d')
             # --restow re-applies cleanly so re-runs are idempotent instead
             # of aborting (set -e) on an already-stowed config.
             stow --restow "$@" "$config" --target="${HOME}"
