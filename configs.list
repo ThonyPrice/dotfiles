@@ -14,4 +14,5 @@ applications
 systemd
 omarchy
 herdr
+herdr-app
 ssh
