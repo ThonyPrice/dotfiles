@@ -20,6 +20,12 @@ CONFIGS_LIST="${REPO_PATH}/configs.list"
 PACKAGES_LIST="${REPO_PATH}/packages.list"
 PACKAGES_DIR="${REPO_PATH}/omarchy-packages"
 
+# Servers (see README.org, "Servers")
+SERVERS_LIST="${REPO_PATH}/servers.list"
+OMADOTS_REPO="https://github.com/omacom-io/omadots.git"
+OMADOTS_PATH="${XDG_DATA_HOME:-$HOME/.local/share}/omadots"
+SYNC_ERROR_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles/sync-error"
+
 # ------------------------------------------------------------------------------
 # Helper Functions
 # ------------------------------------------------------------------------------
@@ -89,9 +95,12 @@ validate_repo() {
 # Config Management Functions
 # ------------------------------------------------------------------------------
 
-# Sync all configurations using GNU Stow
+# Stow every config in a manifest (default: configs.list); further arguments
+# go to stow
 config_sync() {
-    info "Syncing configurations..."
+    local manifest="${1:-$CONFIGS_LIST}"
+    shift || true
+    info "Syncing configurations from $(basename "$manifest")..."
 
     # Check if stow is installed
     if ! command_exists stow; then
@@ -102,7 +111,7 @@ config_sync() {
 
     # Read configs from manifest
     local configs
-    configs=$(read_manifest "$CONFIGS_LIST")
+    configs=$(read_manifest "$manifest")
 
     if [[ -z "$configs" ]]; then
         info "No configurations to sync"
@@ -118,7 +127,7 @@ config_sync() {
             info "Stowing $config..."
             # --restow re-applies cleanly so re-runs are idempotent instead
             # of aborting (set -e) on an already-stowed config.
-            stow --restow "$config" --target="${HOME}"
+            stow --restow "$@" "$config" --target="${HOME}"
             success "$config stowed"
         else
             echo "Warning: Config directory '$config' not found, skipping..." >&2
@@ -304,6 +313,62 @@ EOF
 }
 
 # ------------------------------------------------------------------------------
+# Server Functions
+# ------------------------------------------------------------------------------
+
+# Record how the last server sync ended. The zsh config prints the error file
+# at login, so a failing sync is seen instead of silently drifting.
+server_sync_finished() {
+    local rc=$1
+    if [[ $rc -eq 0 ]]; then
+        rm -f "$SYNC_ERROR_FILE"
+    else
+        mkdir -p "$(dirname "$SYNC_ERROR_FILE")"
+        echo "$(date '+%F %R') exit $rc; see: journalctl -u dotfiles-sync@${USER}" > "$SYNC_ERROR_FILE"
+    fi
+}
+
+# Bring a server in line with this repo: pull it, pull omadots, then stow
+# servers.list. Run hourly by the dotfiles-sync@<user> timer that the homelab
+# repo installs (ansible/roles/dotfiles).
+server_sync() {
+    trap 'server_sync_finished $?' EXIT
+    validate_repo
+
+    if [[ -z "${DOTFILES_NO_PULL:-}" ]]; then
+        info "Pulling dotfiles..."
+        git -C "$REPO_PATH" pull --ff-only --quiet
+        # Re-run from the top so a pulled change to this script takes effect.
+        DOTFILES_NO_PULL=1 exec "$SCRIPT_PATH" server sync
+    fi
+
+    # omadots is the upstream of Omarchy's shell config (aliases, functions,
+    # tool init): on the laptop the omarchy-zsh package ships it under
+    # /usr/share/omarchy-zsh, on servers it is this clone. Nothing is edited in
+    # it, so a hard reset keeps it current even if upstream rewrites history.
+    info "Pulling omadots..."
+    if [[ -d "$OMADOTS_PATH/.git" ]]; then
+        git -C "$OMADOTS_PATH" fetch --quiet --depth 1 origin HEAD
+        git -C "$OMADOTS_PATH" reset --quiet --hard FETCH_HEAD
+    else
+        git clone --quiet --depth 1 "$OMADOTS_REPO" "$OMADOTS_PATH"
+    fi
+
+    # Where omadots' own installer puts it, and where its `all` sources from.
+    local shell_dir="$HOME/.config/shell"
+    if [[ -e "$shell_dir" && ! -L "$shell_dir" ]]; then
+        error "$shell_dir exists and is not a link; move it away"
+    fi
+    mkdir -p "$HOME/.config"
+    ln -sfn "$OMADOTS_PATH/config/shell" "$shell_dir"
+
+    # No folding: real directories with per-file links, so apps that keep
+    # state in ~/.config/<app> (herdr's sockets and sessions) don't write it
+    # into this clone.
+    config_sync "$SERVERS_LIST" --no-folding
+}
+
+# ------------------------------------------------------------------------------
 # Command Parsing and Help
 # ------------------------------------------------------------------------------
 
@@ -322,6 +387,8 @@ Commands:
 
   packages install         Install all packages from the manifest
   packages add <name>      Add a new package to the repository
+
+  server sync              On a server: pull this repo and omadots, stow servers.list
 
 Options:
   -h, --help              Show this help message
@@ -369,6 +436,16 @@ parse_command() {
                     ;;
                 *)
                     error "Unknown packages subcommand: $subcommand\nUse 'dotfiles --help' for usage"
+                    ;;
+            esac
+            ;;
+        server)
+            case "$subcommand" in
+                sync)
+                    server_sync
+                    ;;
+                *)
+                    error "Unknown server subcommand: $subcommand\nUse 'dotfiles --help' for usage"
                     ;;
             esac
             ;;

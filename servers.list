@@ -1,0 +1,10 @@
+# Dotfiles configurations stowed on servers (the homelab boxes)
+# A subset of configs.list: the terminal experience, nothing desktop-only.
+# Applied hourly by `dotfiles server sync`; see README.org, "Servers".
+# Lines starting with # are ignored
+
+zsh
+zinit
+starship
+nvim
+herdr
