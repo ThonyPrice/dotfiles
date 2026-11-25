@@ -47,4 +47,8 @@ alias ...='zd ./../..'
 alias "cd .."='zd ./..'
 alias "cd ..."='zd ./../..'
 
-
+# Revive's block: resumes the agent a herdr-core terminal lost to a reboot.
+# Only where the homelab agent role installs it; does nothing elsewhere.
+if [[ -f ~/.local/share/herdr-revive/.zshrc ]]; then
+  source ~/.local/share/herdr-revive/.zshrc
+fi
